@@ -55,9 +55,9 @@
 
   <div id="touch">
     <div class="b" data-k="left"  style="left:12px;bottom:14px">◀</div>
-    <div class="b" data-k="right" style="left:88px;bottom:14px">▶</div>
-    <div class="b" data-k="up"    style="left:50px;bottom:78px">▲</div>
-    <div class="b" data-k="down"  style="left:50px;bottom:-50px;display:none">▼</div>
+    <div class="b" data-k="down"  style="left:81px;bottom:14px">▼</div>
+    <div class="b" data-k="right" style="left:150px;bottom:14px">▶</div>
+    <div class="b" data-k="up"    style="left:81px;bottom:82px">▲</div>
     <div class="b" data-k="atk"   style="right:90px;bottom:14px">🧀</div>
     <div class="b" data-k="jump"  style="right:14px;bottom:50px">⤒</div>
   </div>
@@ -653,8 +653,6 @@ if ('ontouchstart' in window) {
     b.addEventListener('pointerdown', on); b.addEventListener('pointerup', off); b.addEventListener('pointercancel', off); b.addEventListener('pointerleave', off);
   });
   cv.addEventListener('pointerdown', () => advance());
-  // 补充一个下按钮
-  const d = document.querySelector('#touch .b[data-k=down]'); d.style.display = 'flex'; d.style.bottom = '14px'; d.style.left = '50px'; d.style.display = 'none';
 }
 
 /* ================= 主循环 ================= */
