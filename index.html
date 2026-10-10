@@ -108,17 +108,17 @@ function cartoonize(img, zoom, ox, oy) {
       // 1. 平滑（多次盒式模糊，去掉皮肤纹理）
       let a = new Float32Array(S * S * 3);
       for (let i = 0; i < S * S; i++) { a[i*3] = d[i*4]; a[i*3+1] = d[i*4+1]; a[i*3+2] = d[i*4+2]; }
-      a = boxBlur(a, S, 3, 3);
+      a = boxBlur(a, S, 2, 2);
       // 2. 亮度（用于边缘）
       const lum = new Float32Array(S * S);
       for (let i = 0; i < S * S; i++) lum[i] = .3 * a[i*3] + .59 * a[i*3+1] + .11 * a[i*3+2];
       // 3. 提高饱和度 + 色阶分层（赛璐璐风格）
-      const L = 6;
+      const L = 9;
       for (let i = 0; i < S * S; i++) {
         const gray = lum[i];
         for (let k = 0; k < 3; k++) {
-          let v = gray + (a[i*3+k] - gray) * 1.45;
-          v = (v - 128) * 1.12 + 128;
+          let v = gray + (a[i*3+k] - gray) * 1.1;
+          v = (v - 128) * 1.05 + 128;
           v = Math.max(0, Math.min(255, v));
           d[i*4+k] = Math.round(v / 255 * (L - 1)) / (L - 1) * 255;
         }
@@ -131,8 +131,8 @@ function cartoonize(img, zoom, ox, oy) {
         const gx = -sm[p-S-1] - 2*sm[p-1] - sm[p+S-1] + sm[p-S+1] + 2*sm[p+1] + sm[p+S+1];
         const gy = -sm[p-S-1] - 2*sm[p-S] - sm[p-S+1] + sm[p+S-1] + 2*sm[p+S] + sm[p+S+1];
         const m = Math.sqrt(gx*gx + gy*gy);
-        if (m > 70) {
-          const t = Math.min(1, (m - 70) / 60);
+        if (m > 110) {
+          const t = Math.min(1, (m - 110) / 80);
           for (let k = 0; k < 3; k++) d[p*4+k] = d[p*4+k] * (1 - t) + 35 * t;
         }
       }
@@ -169,16 +169,47 @@ function boxBlur(src, S, r, passes, ch = 3) {
   return a;
 }
 function drawDefaultFace(g, S) {
-  g.fillStyle = '#bfe6ff'; g.fillRect(0, 0, S, S);
-  g.fillStyle = '#ffd2a8'; g.beginPath(); g.ellipse(S/2, S/2 + 6, 56, 60, 0, 0, 7); g.fill();
-  g.fillStyle = '#4a2f1f'; g.beginPath(); g.ellipse(S/2, 42, 62, 34, 0, Math.PI, 0); g.fill();
-  g.fillRect(18, 40, 124, 14);
-  g.fillStyle = '#2b1d16';
-  g.beginPath(); g.arc(58, 84, 8, 0, 7); g.arc(102, 84, 8, 0, 7); g.fill();
-  g.fillStyle = '#fff'; g.beginPath(); g.arc(61, 81, 3, 0, 7); g.arc(105, 81, 3, 0, 7); g.fill();
-  g.strokeStyle = '#2b1d16'; g.lineWidth = 5; g.lineCap = 'round';
-  g.beginPath(); g.arc(80, 100, 22, .2, Math.PI - .2); g.stroke();
-  g.fillStyle = 'rgba(255,120,120,.5)'; g.beginPath(); g.arc(40, 104, 10, 0, 7); g.arc(120, 104, 10, 0, 7); g.fill();
+  // 手绘卡通头像：短黑寸头、圆脸、粗直眉、黑亮大眼睛、小鼻子、小嘴巴
+  const ink = '#2b1d16', skin = '#f3b57f', hair = '#1c1818';
+  g.fillStyle = '#cfeaff'; g.fillRect(0, 0, S, S);
+  g.lineJoin = 'round'; g.lineCap = 'round';
+  // 耳朵
+  for (const sx of [24, 136]) {
+    g.fillStyle = skin; g.strokeStyle = ink; g.lineWidth = 4;
+    g.beginPath(); g.ellipse(sx, 92, 11, 15, 0, 0, 7); g.fill(); g.stroke();
+    g.fillStyle = '#e49c68'; g.beginPath(); g.ellipse(sx + (sx < 80 ? 2 : -2), 93, 5, 8, 0, 0, 7); g.fill();
+  }
+  // 脸
+  g.fillStyle = skin; g.strokeStyle = ink; g.lineWidth = 4;
+  g.beginPath(); g.ellipse(80, 90, 54, 58, 0, 0, 7); g.fill(); g.stroke();
+  // 头发（寸头）
+  g.fillStyle = hair;
+  g.beginPath(); g.moveTo(26, 80);
+  g.quadraticCurveTo(18, 18, 80, 12); g.quadraticCurveTo(142, 18, 134, 80);
+  g.quadraticCurveTo(131, 56, 112, 48); g.quadraticCurveTo(80, 38, 48, 48); g.quadraticCurveTo(29, 56, 26, 80);
+  g.fill();
+  g.strokeStyle = '#4a4444'; g.lineWidth = 2.5;
+  for (const [x, y, dx] of [[50,26,-4],[66,19,-2],[84,17,0],[100,20,3],[116,27,5],[40,40,-5],[124,40,5]]) { g.beginPath(); g.moveTo(x, y + 8); g.lineTo(x + dx, y); g.stroke(); }
+  // 眉毛
+  g.strokeStyle = hair; g.lineWidth = 7;
+  g.beginPath(); g.moveTo(40, 71); g.quadraticCurveTo(54, 61, 70, 66); g.moveTo(90, 66); g.quadraticCurveTo(106, 61, 120, 71); g.stroke();
+  // 眼睛
+  for (const ex of [57, 103]) {
+    g.fillStyle = '#fff'; g.strokeStyle = ink; g.lineWidth = 3;
+    g.beginPath(); g.ellipse(ex, 88, 13, 9.5, 0, 0, 7); g.fill(); g.stroke();
+    g.fillStyle = '#1a1210'; g.beginPath(); g.ellipse(ex + 1, 88, 8, 8, 0, 0, 7); g.fill();
+    g.fillStyle = '#fff'; g.beginPath(); g.arc(ex + 4, 85, 2.8, 0, 7); g.arc(ex - 2, 91, 1.5, 0, 7); g.fill();
+    g.strokeStyle = ink; g.lineWidth = 4; g.beginPath(); g.moveTo(ex - 14, 86); g.quadraticCurveTo(ex, 76, ex + 14, 86); g.stroke();
+  }
+  // 腮红
+  g.fillStyle = 'rgba(255,110,90,.35)'; g.beginPath(); g.ellipse(38, 114, 11, 7, 0, 0, 7); g.ellipse(122, 114, 11, 7, 0, 0, 7); g.fill();
+  // 鼻子
+  g.fillStyle = '#e49c68'; g.beginPath(); g.ellipse(80, 108, 9, 6.5, 0, 0, 7); g.fill();
+  g.fillStyle = '#8a4a2a'; g.beginPath(); g.ellipse(76, 110, 1.8, 1.4, 0, 0, 7); g.ellipse(84, 110, 1.8, 1.4, 0, 0, 7); g.fill();
+  // 嘴巴
+  g.fillStyle = '#d9736a'; g.strokeStyle = ink; g.lineWidth = 3;
+  g.beginPath(); g.ellipse(80, 129, 11, 5.5, 0, 0, 7); g.fill(); g.stroke();
+  g.strokeStyle = '#a8453f'; g.lineWidth = 2; g.beginPath(); g.moveTo(70, 129); g.lineTo(90, 129); g.stroke();
 }
 function refreshHead() {
   headCv = cartoonize(srcImg, +$('zoom').value, +$('ox').value, +$('oy').value);
@@ -507,8 +538,8 @@ function drawKid(p) {
   // 鞋
   ctx.fillStyle = '#d83b3b'; ctx.beginPath(); ctx.ellipse(-5 + sw * 9 + 2, -1, 6, 3.5, 0, 0, 7); ctx.ellipse(5 - sw * 9 + 2, -1, 6, 3.5, 0, 0, 7); ctx.fill();
   // 身体（猫鼠风格：红衣服+奶酪色围巾）
-  ctx.fillStyle = '#ff6b5a'; ctx.strokeStyle = '#2b1d16'; ctx.lineWidth = 3; rr(-11, -34, 22, 24, 8); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = '#ffcf33'; rr(-11, -34, 22, 7, 3); ctx.fill();
+  ctx.fillStyle = '#f4fbf6'; ctx.strokeStyle = '#2b1d16'; ctx.lineWidth = 3; rr(-11, -34, 22, 24, 8); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#a8e0b8'; rr(-11, -34, 22, 7, 3); ctx.fill();
   // 手
   ctx.strokeStyle = '#ffd2a8'; ctx.lineWidth = 6; ctx.beginPath();
   if (p.climb) { ctx.moveTo(-9, -28); ctx.lineTo(-12, -44 + sw * 6); ctx.moveTo(9, -28); ctx.lineTo(12, -44 - sw * 6); }
