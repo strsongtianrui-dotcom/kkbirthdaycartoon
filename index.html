@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>宋康阳 生日快乐</title>
+<style>
+  :root { --bg1:#1b1464; --bg2:#6a1b9a; --bg3:#ff6f91; }
+  * { margin:0; box-sizing:border-box; }
+  html,body { height:100%; overflow:hidden; font-family:"PingFang SC","Microsoft YaHei",sans-serif; }
+  body { background:linear-gradient(160deg,var(--bg1),var(--bg2) 55%,var(--bg3)); }
+  canvas { position:fixed; inset:0; width:100%; height:100%; }
+  #stage { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none; }
+  .name { display:flex; gap:.08em; font-size:min(20vw,120px); font-weight:900; color:#fff; text-shadow:0 6px 0 #ff6f91,0 12px 24px rgba(0,0,0,.35); }
+  .name span { display:inline-block; opacity:0; transform:translateY(-120vh) rotate(-30deg); animation:drop .9s cubic-bezier(.3,1.6,.5,1) forwards, wobble 2.4s ease-in-out infinite; }
+  .name span:nth-child(1){ animation-delay:.3s,1.4s; }
+  .name span:nth-child(2){ animation-delay:.6s,1.7s; }
+  .name span:nth-child(3){ animation-delay:.9s,2s; }
+  @keyframes drop { to { opacity:1; transform:none; } }
+  @keyframes wobble { 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-12px) rotate(4deg); } }
+  .sub { margin-top:.4em; font-size:min(7vw,34px); color:#ffe066; letter-spacing:.3em; opacity:0; animation:fade 1s 1.8s forwards; text-shadow:0 2px 8px rgba(0,0,0,.4); }
+  @keyframes fade { to { opacity:1; } }
+  .cake { margin-top:4vh; width:min(60vw,240px); opacity:0; animation:rise 1s 2.2s forwards; }
+  @keyframes rise { from{ opacity:0; transform:translateY(40px) scale(.7);} to{ opacity:1; transform:none; } }
+  .flame { transform-origin:50% 100%; animation:flick .35s ease-in-out infinite alternate; }
+  .flame:nth-of-type(2){ animation-delay:.1s; } .flame:nth-of-type(3){ animation-delay:.2s; }
+  @keyframes flick { from{ transform:scale(1,1) rotate(-4deg);} to{ transform:scale(.85,1.2) rotate(4deg);} }
+  .hint { position:fixed; bottom:2vh; width:100%; text-align:center; color:rgba(255,255,255,.7); font-size:14px; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="stage">
+  <div class="name"><span>宋</span><span>康</span><span>阳</span></div>
+  <div class="sub">生 日 快 乐 !</div>
+  <svg class="cake" viewBox="0 0 240 190">
+    <ellipse cx="120" cy="178" rx="110" ry="9" fill="rgba(0,0,0,.25)"/>
+    <rect x="30" y="110" width="180" height="62" rx="12" fill="#ffb3c6"/>
+    <rect x="50" y="62" width="140" height="52" rx="12" fill="#ffd6e0"/>
+    <path d="M30 122 q15 22 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 v-12 h-180z" fill="#fff"/>
+    <path d="M50 74 q12 18 23 0 t23 0 t23 0 t23 0 t23 0 v-12 h-137z" fill="#fff"/>
+    <g fill="#ff4d6d"><circle cx="70" cy="150" r="6"/><circle cx="120" cy="154" r="6"/><circle cx="170" cy="150" r="6"/></g>
+    <g fill="#4cc9f0"><rect x="86" y="30" width="8" height="32" rx="2"/><rect x="116" y="30" width="8" height="32" rx="2"/><rect x="146" y="30" width="8" height="32" rx="2"/></g>
+    <path class="flame" d="M90 28 q-8-12 0-24 q8 12 0 24z" fill="#ffd60a"/>
+    <path class="flame" d="M120 28 q-8-12 0-24 q8 12 0 24z" fill="#ff9f1c"/>
+    <path class="flame" d="M150 28 q-8-12 0-24 q8 12 0 24z" fill="#ffd60a"/>
+  </svg>
+</div>
+<div class="hint">点击屏幕放烟花 🎆</div>
+<script>
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+let W, H, dpr;
+function resize(){ dpr = Math.min(devicePixelRatio||1,2); W = cv.width = innerWidth*dpr; H = cv.height = innerHeight*dpr; }
+addEventListener('resize', resize); resize();
+
+const colors = ['#ff6f91','#ffd166','#06d6a0','#4cc9f0','#b388ff','#ff9f1c','#fff'];
+const rnd = (a,b)=>a+Math.random()*(b-a);
+
+// stars
+const stars = Array.from({length:70},()=>({x:Math.random(),y:Math.random()*.7,r:rnd(.5,2),p:rnd(0,6.28)}));
+
+// balloons
+const balloons = Array.from({length:12},()=>newBalloon(true));
+function newBalloon(init){
+  return { x:rnd(.03,.97), y: init? rnd(.2,1.3):1.15, r:rnd(22,38), v:rnd(.0006,.0016), c:colors[Math.random()*6|0], ph:rnd(0,6.28) };
+}
+
+// confetti + fireworks
+let confetti = Array.from({length:90},()=>newConfetti(true));
+function newConfetti(init){
+  return { x:rnd(0,1), y: init? rnd(-1,1):-.05, w:rnd(6,12), h:rnd(10,18), v:rnd(.0008,.002), rot:rnd(0,6.28), vr:rnd(-.1,.1), c:colors[Math.random()*7|0], ph:rnd(0,6.28) };
+}
+let sparks = [];
+function firework(x,y){
+  const c = colors[Math.random()*7|0];
+  for(let i=0;i<60;i++){
+    const a = i/60*6.283, s = rnd(2,7)*dpr;
+    sparks.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,c});
+  }
+}
+addEventListener('pointerdown', e=>firework(e.clientX*dpr,e.clientY*dpr));
+setInterval(()=>firework(rnd(.1,.9)*W, rnd(.1,.5)*H), 1400);
+
+function drawBalloon(b,t){
+  const x = b.x*W + Math.sin(t/900+b.ph)*18*dpr, y = b.y*H, r = b.r*dpr;
+  ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.lineWidth=1.5*dpr;
+  ctx.beginPath(); ctx.moveTo(x,y+r*1.2); ctx.quadraticCurveTo(x+8*dpr,y+r*2.2,x,y+r*3); ctx.stroke();
+  ctx.fillStyle=b.c; ctx.beginPath(); ctx.ellipse(x,y,r*.85,r,0,0,6.283); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(x,y+r); ctx.lineTo(x-5*dpr,y+r+9*dpr); ctx.lineTo(x+5*dpr,y+r+9*dpr); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.4)'; ctx.beginPath(); ctx.ellipse(x-r*.3,y-r*.35,r*.15,r*.3,.5,0,6.283); ctx.fill();
+}
+
+function frame(t){
+  ctx.clearRect(0,0,W,H);
+  for(const s of stars){
+    ctx.globalAlpha = .4+.6*Math.abs(Math.sin(t/700+s.p));
+    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(s.x*W,s.y*H,s.r*dpr,0,6.283); ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  for(let i=0;i<balloons.length;i++){
+    const b=balloons[i]; b.y-=b.v*16; drawBalloon(b,t);
+    if(b.y<-.3) balloons[i]=newBalloon(false);
+  }
+  for(let i=0;i<confetti.length;i++){
+    const f=confetti[i]; f.y+=f.v*16; f.rot+=f.vr;
+    ctx.save(); ctx.translate((f.x+Math.sin(t/600+f.ph)*.02)*W,f.y*H); ctx.rotate(f.rot);
+    ctx.scale(1,Math.cos(t/300+f.ph)); ctx.fillStyle=f.c; ctx.fillRect(-f.w*dpr/2,-f.h*dpr/2,f.w*dpr,f.h*dpr); ctx.restore();
+    if(f.y>1.05) confetti[i]=newConfetti(false);
+  }
+  for(let i=sparks.length-1;i>=0;i--){
+    const p=sparks[i]; p.x+=p.vx; p.y+=p.vy; p.vy+=.08*dpr; p.vx*=.985; p.life-=.014;
+    if(p.life<=0){ sparks.splice(i,1); continue; }
+    ctx.globalAlpha=p.life; ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,2.5*dpr,0,6.283); ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+setTimeout(()=>{ for(let i=0;i<4;i++) setTimeout(()=>firework(rnd(.15,.85)*W,rnd(.15,.45)*H),i*250); },1500);
+</script>
+</body>
+</html>
