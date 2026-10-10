@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>宋康阳 躲猫猫</title>
+<style>
+  * { margin:0; box-sizing:border-box; }
+  html,body { height:100%; overflow:hidden; background:#2b2d42; }
+  svg { position:fixed; inset:0; width:100%; height:100%; }
+  canvas { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; }
+</style>
+</head>
+<body>
+<svg id="s" viewBox="0 0 540 960" preserveAspectRatio="xMidYMid meet" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="tableShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e2ad68"/><stop offset="1" stop-color="#c88f4c"/>
+    </linearGradient>
+    <clipPath id="screen"><rect width="540" height="960"/></clipPath>
+  </defs>
+  <g clip-path="url(#screen)">
+    <!-- wall -->
+    <rect width="540" height="960" fill="#eceff1"/>
+    <rect y="600" width="540" height="40" fill="#dfe3e6"/>
+
+    <!-- bunting -->
+    <path d="M-10 30 Q270 130 550 30" fill="none" stroke="#8d6e63" stroke-width="3"/>
+    <g id="flags"></g>
+
+    <!-- name banner -->
+    <g id="banner" opacity="0">
+      <text id="nameText" x="270" y="205" text-anchor="middle" font-size="110" font-weight="900" fill="#fff" stroke="#ff6f91" stroke-width="14" paint-order="stroke" stroke-linejoin="round">宋康阳</text>
+      <text id="subText" x="270" y="268" text-anchor="middle" font-size="40" font-weight="800" fill="#ff6f91" letter-spacing="10">生日快乐!</text>
+    </g>
+
+    <!-- chair -->
+    <g id="chair" stroke="#5d4037" stroke-width="5" stroke-linejoin="round">
+      <path d="M95 650 V520 Q95 470 150 470 H390 Q445 470 445 520 V650 Z" fill="#8d6e63"/>
+      <g fill="#a1887f"><rect x="150" y="490" width="22" height="160" rx="8"/><rect x="210" y="480" width="22" height="170" rx="8"/><rect x="270" y="478" width="22" height="172" rx="8"/><rect x="330" y="480" width="22" height="170" rx="8"/><rect x="385" y="490" width="22" height="160" rx="8"/></g>
+      <rect x="85" y="600" width="370" height="60" rx="14" fill="#37474f"/>
+    </g>
+
+    <!-- character -->
+    <g id="body">
+      <!-- arms -->
+      <g id="armL"><g id="armLin">
+        <rect x="-19" y="-6" width="38" height="70" rx="19" fill="#3f6fe0"/>
+        <g id="foreL"><rect x="-15" y="52" width="30" height="62" rx="15" fill="#f6c9a3"/><circle cx="0" cy="118" r="19" fill="#f6c9a3"/></g>
+      </g></g>
+      <g id="armR"><g id="armRin">
+        <rect x="-19" y="-6" width="38" height="70" rx="19" fill="#3f6fe0"/>
+        <g id="foreR"><rect x="-15" y="52" width="30" height="62" rx="15" fill="#f6c9a3"/><circle cx="0" cy="118" r="19" fill="#f6c9a3"/></g>
+      </g></g>
+      <!-- torso -->
+      <path d="M-98 20 Q-98 -12 -55 -18 H55 Q98 -12 98 20 L112 420 H-112 Z" fill="#3f6fe0"/>
+      <path d="M-34 -18 Q0 22 34 -18" fill="#f6c9a3" stroke="#2f58c0" stroke-width="5"/>
+      <rect x="-24" y="-50" width="48" height="40" fill="#f6c9a3"/>
+      <!-- head -->
+      <g id="head">
+        <circle cx="-79" cy="-118" r="19" fill="#f6c9a3"/><circle cx="79" cy="-118" r="19" fill="#f6c9a3"/>
+        <circle cx="0" cy="-120" r="80" fill="#f9d3af"/>
+        <path d="M-82 -125 A82 82 0 0 1 82 -125 Q60 -158 20 -160 Q-30 -160 -82 -125Z" fill="#2a2320"/>
+        <g id="eyes">
+          <g id="eyeL"><ellipse cx="-30" cy="-116" rx="14" ry="17" fill="#fff"/><circle class="pupil" cx="-30" cy="-114" r="9" fill="#2a2320"/><circle class="shine" cx="-27" cy="-119" r="3" fill="#fff"/></g>
+          <g id="eyeR"><ellipse cx="30" cy="-116" rx="14" ry="17" fill="#fff"/><circle class="pupil" cx="30" cy="-114" r="9" fill="#2a2320"/><circle class="shine" cx="33" cy="-119" r="3" fill="#fff"/></g>
+        </g>
+        <path d="M-48 -142 Q-30 -152 -14 -142" fill="none" stroke="#2a2320" stroke-width="5" stroke-linecap="round"/>
+        <path d="M14 -142 Q30 -152 48 -142" fill="none" stroke="#2a2320" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="-52" cy="-86" r="13" fill="#ff9aa2" opacity=".6"/><circle cx="52" cy="-86" r="13" fill="#ff9aa2" opacity=".6"/>
+        <path d="M-4 -98 Q0 -92 4 -98" fill="none" stroke="#d99a7a" stroke-width="4" stroke-linecap="round"/>
+        <path id="mClosed" d="M-20 -76 Q0 -62 20 -76" fill="none" stroke="#a5493d" stroke-width="5" stroke-linecap="round"/>
+        <g id="mOpen"><path d="M-24 -80 Q0 -40 24 -80 Z" fill="#7a2a2a"/><path d="M-12 -62 Q0 -52 12 -62 Q0 -68 -12 -62Z" fill="#ff7a8a"/></g>
+        <!-- party hat -->
+        <g id="hat" opacity="0">
+          <path d="M-45 -188 L0 -290 L45 -188 Z" fill="#ff6f91"/>
+          <path d="M-33 -214 L33 -214 L25 -232 L-25 -232Z" fill="#ffd166"/>
+          <circle cx="0" cy="-292" r="13" fill="#4cc9f0"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- hands resting on table (in front of table, drawn after table) -->
+    <!-- table -->
+    <g id="table">
+      <rect y="620" width="540" height="340" fill="url(#tableShade)"/>
+      <rect y="620" width="540" height="10" fill="#a8743a"/>
+      <g id="grain" fill="none" stroke="#b9843f" stroke-width="2" opacity=".55"></g>
+    </g>
+    <g id="hands" opacity="0">
+      <ellipse cx="-118" cy="650" rx="44" ry="17" fill="#f6c9a3"/><circle cx="-150" cy="656" r="19" fill="#f6c9a3"/>
+      <ellipse cx="118" cy="650" rx="44" ry="17" fill="#f6c9a3"/><circle cx="150" cy="656" r="19" fill="#f6c9a3"/>
+    </g>
+  </g>
+</svg>
+<canvas id="cf"></canvas>
+<script>
+const $ = id => document.getElementById(id);
+const rnd = (a,b)=>a+Math.random()*(b-a);
+const NS = 'http://www.w3.org/2000/svg';
+const LOOP = 25;
+
+/* ---- scenery ---- */
+(function(){
+  const flags = $('flags'), txt = ['生','日','快','乐','!'], cols = ['#ff6f91','#ffd166','#06d6a0','#4cc9f0','#b388ff'];
+  for (let i=0;i<5;i++){
+    const x = 60 + i*105, y = 30 + Math.sin((x/540)*Math.PI)*62 + 8;
+    const g = document.createElementNS(NS,'g');
+    g.innerHTML = `<path d="M${x-30} ${y} L${x+30} ${y} L${x} ${y+62}Z" fill="${cols[i]}"/><text x="${x}" y="${y+30}" text-anchor="middle" font-size="26" font-weight="900" fill="#fff">${txt[i]}</text>`;
+    flags.appendChild(g);
+  }
+  const grain = $('grain');
+  for (let i=0;i<22;i++){
+    const y = 640 + i*15 + rnd(-3,3), p = document.createElementNS(NS,'path');
+    let d = `M-10 ${y}`;
+    for (let x=0;x<=560;x+=70) d += ` Q${x+35} ${y+rnd(-6,6)} ${x+70} ${y+rnd(-2,2)}`;
+    p.setAttribute('d', d); grain.appendChild(p);
+  }
+})();
+
+/* ---- choreography (imitates the video) ----
+   [t, x, rise, tilt, head, drop, lookX, mouth, armR, armL, hands] */
+const KF = [
+ [0,    0, .62,  0, 10, 30,  .3, 0, 10, 10, 1],  // leaning on table, looking down
+ [1.5, 10, .60,  2, 12, 34,  .2, 0, 12,  8, 1],
+ [3,    0, .62,  0, 10, 30,  .3, 0, 10, 10, 1],
+ [3.6, 70, .50, 20, 15, 20,  .2, 0, 20, 30,.5],  // slides away
+ [4.6,230,-.10, 30, 20,  0,   0, 0,  0,  0, 0],  // gone
+ [5.6,230,-.10, 30, 20,  0,   0, 0,  0,  0, 0],
+ [6.4,  0, .95,  0, -5,  0,   1, 1,  0,  0, 1],  // pops up, smiling
+ [8,  -25, 1.0, -6,-10,  0, -.7, 1,  0,  0, 1],
+ [9,   40, 1.0,  8,  8,  0,  .8, 1, 20,  0, 1],
+ [9.8, 90, .95, 14, 12,  0,   1, 1, 60,  0,.3],  // reaching out
+ [10.8,130,.95, 16, 12,  0,  .6, 1, 80,  0, 0],
+ [11.6,-40,.35,  0, 10,  0,  .2, 0,  0,  0,.6],  // ducks
+ [12.4,-170,.95,-14,-12, 0,  -1, 1,  0, 75, 0],  // pops up on the left
+ [13.4,180,.9,  12, 10,  0,   1, 1, 70,  0, 0],
+ [14.4, 90,.85,  6,  8,  0,  .5, 1,  0,  0, 1],
+ [15.5,-10,.72,  0,-10, 10,   0, 1,  0,  0, 1],  // peeking over the table
+ [17,  10, .68,  0,  6, 14,  .7, 1,  0,  0, 1],
+ [18.5,-10,.72,  0, -6,  8,  .3, 1,  0,  0, 1],
+ [19.3,-30,.85, -8, -8,  0, -.6, 1, 30, 30,.5],  // party time: wiggles
+ [20.2, 30,.85,  8,  8,  0,  .6, 1, 40, 40, 0],
+ [21,-120,.9, -12,-10,  0,  -1, 1,  0, 50, 0],
+ [22, 160,.95, 12, 10,  0,   1, 1, 60,  0, 0],
+ [23.2,  0,1.05, 0,  0,  0,   0, 1, 95, 95, 0],  // arms up: hooray
+ [24.4,  0,1.05, 0,  0,  0,   0, 1, 95, 95, 0],
+ [25,    0, .62, 0, 10, 30,  .3, 0, 10, 10, 1]
+];
+const ease = u => u*u*(3-2*u);
+function pose(t){
+  let i = 0; while (i < KF.length-2 && t > KF[i+1][0]) i++;
+  const a = KF[i], b = KF[i+1];
+  const u = ease(Math.min(1, Math.max(0, (t-a[0])/(b[0]-a[0]))));
+  return a.map((v,k)=> v + (b[k]-v)*u);
+}
+
+const body=$('body'), head=$('head'), hands=$('hands'), hat=$('hat');
+const armL=$('armL'), armR=$('armR'), armLin=$('armLin'), armRin=$('armRin'), foreL=$('foreL'), foreR=$('foreR');
+const mOpen=$('mOpen'), mClosed=$('mClosed'), banner=$('banner'), nameText=$('nameText');
+const pupils = [...document.querySelectorAll('.pupil')], shines = [...document.querySelectorAll('.shine')];
+const eyes = [$('eyeL'), $('eyeR')];
+
+const armAngle = a => a*0.7 + 100*Math.min(1, Math.max(0,a)/15);
+function render(t){
+  let [,x,rise,tilt,hd,drop,look,mouth,aR,aL,hnd] = pose(t);
+  const bob = Math.sin(t*4)*3;
+  // quick wiggle just before the party hat
+  if (t>19 && t<20.4) x += Math.sin(t*38)*8;
+  if (t>17.2 && t<18) hd += Math.sin(t*30)*5;
+  const oy = 940 - rise*330 + bob;
+  body.setAttribute('transform', `translate(${270+x} ${oy}) rotate(${tilt})`);
+  head.setAttribute('transform', `translate(0 ${drop}) rotate(${hd} 0 -50)`);
+  // arms: pivot at shoulders
+  const wave = Math.sin(t*14)*14;
+  armR.setAttribute('transform', `translate(92 14) rotate(${-armAngle(aR)})`);
+  armL.setAttribute('transform', `translate(-92 14) rotate(${armAngle(aL)})`);
+  armRin.setAttribute('transform', '');
+  foreR.setAttribute('transform', aR>20 ? `rotate(${-wave} 0 56)` : '');
+  foreL.setAttribute('transform', aL>20 ? `rotate(${wave} 0 56)` : '');
+  // face
+  pupils.forEach((p,k)=>{ p.setAttribute('transform', `translate(${look*6} ${drop/8})`); shines[k].setAttribute('transform', `translate(${look*6} ${drop/8})`); });
+  const blink = (t%3.1) < .12 ? .1 : 1;
+  eyes.forEach((e,k)=> e.setAttribute('transform', `translate(${k?30:-30} -116) scale(1 ${blink}) translate(${k?-30:30} 116)`));
+  mOpen.setAttribute('transform', `translate(0 -76) scale(1 ${Math.max(.01,mouth)}) translate(0 76)`);
+  mOpen.setAttribute('opacity', mouth>.05?1:0);
+  mClosed.setAttribute('opacity', mouth>.5?0:1);
+  // hands on the table follow the body
+  hands.setAttribute('transform', `translate(${270+x} 0)`);
+  hands.setAttribute('opacity', Math.max(0, hnd) * Math.min(1, Math.max(0, rise*3)));
+  // party hat + banner
+  const hatOn = t>=19.3 && t<24.6 ? 1 : 0;
+  hat.setAttribute('opacity', hatOn);
+  const bu = Math.min(1, Math.max(0, (t-19.3)/.7));
+  const sc = bu<1 ? 1 + Math.sin(bu*Math.PI)*.35 : 1 + Math.sin(t*5)*.03;
+  banner.setAttribute('opacity', t>=19.3 && t<24.6 ? bu : 0);
+  banner.setAttribute('transform', `translate(270 235) scale(${sc}) translate(-270 -235)`);
+}
+
+/* ---- confetti burst for the finale ---- */
+const cv=$('cf'), ctx=cv.getContext('2d'); let W,H,dpr;
+function resize(){ dpr=Math.min(devicePixelRatio||1,2); W=cv.width=innerWidth*dpr; H=cv.height=innerHeight*dpr; }
+addEventListener('resize',resize); resize();
+const colors=['#ff6f91','#ffd166','#06d6a0','#4cc9f0','#b388ff','#ff9f1c'];
+let bits=[]; let burst=false;
+function spawn(){ for(let i=0;i<140;i++) bits.push({x:rnd(0,W),y:rnd(-H*.3,0),vy:rnd(2,5)*dpr,vx:rnd(-1.5,1.5)*dpr,w:rnd(6,12)*dpr,h:rnd(10,18)*dpr,r:rnd(0,6.3),vr:rnd(-.2,.2),c:colors[Math.random()*6|0],ph:rnd(0,6.3)}); }
+function drawConfetti(t){
+  ctx.clearRect(0,0,W,H);
+  for(let i=bits.length-1;i>=0;i--){ const b=bits[i]; b.x+=b.vx+Math.sin(t*3+b.ph); b.y+=b.vy; b.r+=b.vr;
+    ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.r); ctx.scale(1,Math.cos(t*6+b.ph)); ctx.fillStyle=b.c; ctx.fillRect(-b.w/2,-b.h/2,b.w,b.h); ctx.restore();
+    if(b.y>H+30) bits.splice(i,1);
+  }
+}
+
+/* ---- main loop (?t=12 freezes at a time, handy for screenshots) ---- */
+const frozen = new URLSearchParams(location.search).get('t');
+let start = performance.now(), last = 0;
+function tick(now){
+  const t = frozen!==null ? parseFloat(frozen) : ((now-start)/1000) % LOOP;
+  if (t < last) { burst=false; bits=[]; }
+  if (!burst && t>=19.3) { burst=true; spawn(); }
+  last = t;
+  render(t); drawConfetti(t);
+  if (frozen===null) requestAnimationFrame(tick);
+}
+if (frozen!==null && parseFloat(frozen)>=19.3) { spawn(); for(let i=0;i<40;i++) bits.forEach(b=>{b.y+=b.vy;}); }
+requestAnimationFrame(tick);
+addEventListener('pointerdown', ()=>{ start=performance.now(); burst=false; bits=[]; });
+</script>
+</body>
+</html>
