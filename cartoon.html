@@ -91,6 +91,21 @@
       <ellipse cx="-118" cy="650" rx="44" ry="17" fill="#f6c9a3"/><circle cx="-150" cy="656" r="19" fill="#f6c9a3"/>
       <ellipse cx="118" cy="650" rx="44" ry="17" fill="#f6c9a3"/><circle cx="150" cy="656" r="19" fill="#f6c9a3"/>
     </g>
+    <g id="dancer" opacity="0">
+      <ellipse id="dShadow" cx="270" cy="892" rx="80" ry="14" fill="rgba(70,35,0,.28)"/>
+      <g id="dBody">
+        <g id="dLegL"><rect x="-19" y="-6" width="38" height="106" rx="19" fill="#34495e"/><g id="dKneeL"><rect x="-17" y="-4" width="34" height="104" rx="17" fill="#34495e"/><ellipse cx="0" cy="104" rx="30" ry="14" fill="#fff" stroke="#ff6f91" stroke-width="5"/></g></g>
+        <g id="dLegR"><rect x="-19" y="-6" width="38" height="106" rx="19" fill="#34495e"/><g id="dKneeR"><rect x="-17" y="-4" width="34" height="104" rx="17" fill="#34495e"/><ellipse cx="0" cy="104" rx="30" ry="14" fill="#fff" stroke="#ff6f91" stroke-width="5"/></g></g>
+        <g id="dTorso">
+          <path d="M-62 4 Q-72 -80 -66 -150 Q-64 -176 -40 -178 H40 Q64 -176 66 -150 Q72 -80 62 4 Z" fill="#3f6fe0"/>
+          <rect x="-64" y="-12" width="128" height="14" rx="6" fill="#2a3b7a"/>
+          <rect x="-22" y="-214" width="44" height="46" rx="10" fill="#f6c9a3"/>
+          <g id="dArmL"><rect x="-19" y="-6" width="38" height="66" rx="19" fill="#3f6fe0"/><g id="dElbL"><rect x="-15" y="-6" width="30" height="62" rx="15" fill="#f6c9a3"/><circle cx="0" cy="58" r="18" fill="#f6c9a3"/></g></g>
+          <g id="dArmR"><rect x="-19" y="-6" width="38" height="66" rx="19" fill="#3f6fe0"/><g id="dElbR"><rect x="-15" y="-6" width="30" height="62" rx="15" fill="#f6c9a3"/><circle cx="0" cy="58" r="18" fill="#f6c9a3"/></g></g>
+          <g id="dHead"></g>
+        </g>
+      </g>
+    </g>
   </g>
 </svg>
 <canvas id="cf"></canvas>
@@ -98,7 +113,7 @@
 const $ = id => document.getElementById(id);
 const rnd = (a,b)=>a+Math.random()*(b-a);
 const NS = 'http://www.w3.org/2000/svg';
-const LOOP = 25;
+const LOOP = 32;
 
 /* ---- scenery ---- */
 (function(){
@@ -138,14 +153,10 @@ const KF = [
  [14.4, 90,.85,  6,  8,  0,  .5, 1,  0,  0, 1],
  [15.5,-10,.72,  0,-10, 10,   0, 1,  0,  0, 1],  // peeking over the table
  [17,  10, .68,  0,  6, 14,  .7, 1,  0,  0, 1],
- [18.5,-10,.72,  0, -6,  8,  .3, 1,  0,  0, 1],
- [19.3,-30,.85, -8, -8,  0, -.6, 1, 30, 30,.5],  // party time: wiggles
- [20.2, 30,.85,  8,  8,  0,  .6, 1, 40, 40, 0],
- [21,-120,.9, -12,-10,  0,  -1, 1,  0, 50, 0],
- [22, 160,.95, 12, 10,  0,   1, 1, 60,  0, 0],
- [23.2,  0,1.05, 0,  0,  0,   0, 1, 95, 95, 0],  // arms up: hooray
- [24.4,  0,1.05, 0,  0,  0,   0, 1, 95, 95, 0],
- [25,    0, .62, 0, 10, 30,  .3, 0, 10, 10, 1]
+ [18.2,-10,.72,  0, -6,  8,  .3, 1,  0,  0, 1],
+ [18.5,  0,1.15,  0, -5,  0,   0, 1,  0,  0, 0],  // rises up, about to jump onto the table
+ [31,    0,1.15,  0, -5,  0,   0, 1,  0,  0, 0],  // (the full-body dancer takes over here)
+ [32,    0, .62,  0, 10, 30,  .3, 0, 10, 10, 1]
 ];
 const ease = u => u*u*(3-2*u);
 function pose(t){
@@ -187,14 +198,92 @@ function render(t){
   mClosed.setAttribute('opacity', mouth>.5?0:1);
   // hands on the table follow the body
   hands.setAttribute('transform', `translate(${270+x} 0)`);
-  hands.setAttribute('opacity', Math.max(0, hnd) * Math.min(1, Math.max(0, rise*3)));
-  // party hat + banner
-  const hatOn = t>=19.3 && t<24.6 ? 1 : 0;
-  hat.setAttribute('opacity', hatOn);
+  // who is on stage: peeking boy (behind the table) or full-body dancer (on it)
+  const bodyOn = (t<18.45 || t>=31) ? 1 : 0;
+  body.setAttribute('opacity', bodyOn);
+  hands.setAttribute('opacity', bodyOn * Math.max(0, hnd) * Math.min(1, Math.max(0, rise*3)));
+  renderDancer(t);
   const bu = Math.min(1, Math.max(0, (t-19.3)/.7));
   const sc = bu<1 ? 1 + Math.sin(bu*Math.PI)*.35 : 1 + Math.sin(t*5)*.03;
-  banner.setAttribute('opacity', t>=19.3 && t<24.6 ? bu : 0);
+  banner.setAttribute('opacity', t>=19.3 && t<31 ? bu : 0);
   banner.setAttribute('transform', `translate(270 235) scale(${sc}) translate(-270 -235)`);
+}
+
+/* ---- full-body dancer ---- */
+const D = Math.PI/180, GROUND = 892, SC = .9;
+(function(){ // reuse the face (with party hat) for the dancer
+  const hc = head.cloneNode(true);
+  hc.removeAttribute('transform');
+  const open = hc.querySelector('#mOpen'), closed = hc.querySelector('#mClosed'), h = hc.querySelector('#hat');
+  open.setAttribute('opacity',1); open.removeAttribute('transform'); closed.setAttribute('opacity',0); h.setAttribute('opacity',1);
+  hc.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id')); hc.removeAttribute('id');
+  $('dHead').appendChild(hc);
+})();
+const dNode = Object.fromEntries(['dancer','dShadow','dBody','dLegL','dLegR','dKneeL','dKneeR','dTorso','dArmL','dArmR','dElbL','dElbR','dHead'].map(k=>[k,$(k)]));
+
+function dancerPose(t){
+  const P = {x:0,air:0,aL:12,bL:25,aR:12,bR:25,tTilt:0,hTilt:0,armL:50,elL:30,armR:50,elR:30,sx:1};
+  const FIN = {aL:14,bL:20,aR:26,bR:10,armL:45,elL:130,armR:170,elR:0,hTilt:8,tTilt:-4};
+  const mix = (o,u)=>{ for(const k in o) P[k] = P[k] + (o[k]-P[k])*u; };
+  if (t < 19.3){                                    // jump up onto the table
+    const u=(t-18.5)/.8, k=4*u*(1-u);
+    P.air=190*k; P.aL=P.aR=12+25*k; P.bL=P.bR=25+55*k; P.armL=P.armR=60+70*k; P.elL=P.elR=20; return P;
+  }
+  const tau=t-19.3, w=4*Math.PI;
+  if (tau < 2.4){                                   // A: groove, pumping arms
+    const c=Math.cos(w*tau), s=Math.sin(w*tau/2);
+    P.aL=P.aR=14+4*c; P.bL=P.bR=30+16*c; P.tTilt=6*s; P.hTilt=8*s;
+    P.armL=55+40*s; P.armR=55-40*s; P.elL=P.elR=45+20*c;
+  } else if (tau < 4.8){                            // B: side steps across the table
+    const q=tau-2.4, s=Math.sin(2*Math.PI*q), sw=Math.sin(2*Math.PI*q/2.4), lf=Math.max(0,s), rf=Math.max(0,-s);
+    P.x=105*sw; P.aL=12+22*lf; P.bL=28+40*lf; P.aR=12+22*rf; P.bR=28+40*rf;
+    P.tTilt=10*Math.cos(2*Math.PI*q/2.4); P.hTilt=-6*sw;
+    P.armL=75+25*Math.sin(2*Math.PI*q+1); P.armR=75+25*Math.sin(2*Math.PI*q+1+Math.PI); P.elL=P.elR=20;
+  } else if (tau < 7.2){                            // C: robot / pop-lock poses on the beat
+    const st=(tau-4.8)*4, i=Math.floor(st), f=ease(Math.min(1,(st-i)*4));
+    const poses=[[150,30,70,90],[30,150,90,70],[100,100,100,100],[160,160,10,10]];
+    const pv=poses[(i+3)%4], cu=poses[i%4], hs=(i%2?-1:1);
+    P.armL=pv[0]+(cu[0]-pv[0])*f; P.armR=pv[1]+(cu[1]-pv[1])*f; P.elL=pv[2]+(cu[2]-pv[2])*f; P.elR=pv[3]+(cu[3]-pv[3])*f;
+    P.hTilt=14*hs*(2*f-1); P.tTilt=6*hs*(2*f-1);
+    P.aL=P.aR=16; P.bL=P.bR=38+10*Math.cos(2*Math.PI*st);
+  } else if (tau < 9.0){                            // D: floss
+    const th=4*Math.PI*(tau-7.2), s=Math.sin(th);
+    P.aL=P.aR=14; P.bL=P.bR=34+10*Math.cos(2*th);
+    P.armL=60+55*s; P.armR=60-55*s; P.elL=P.elR=10; P.tTilt=-12*s; P.hTilt=10*s; P.x=-26*s;
+  } else if (tau < 9.8){                            // E: spin
+    const q=(tau-9)/.8, k=Math.sin(Math.PI*q); let cs=Math.cos(2*Math.PI*q);
+    if (Math.abs(cs)<.08) cs = cs<0 ? -.08 : .08;
+    P.sx=cs; P.air=36*k; P.aL=P.aR=12+14*k; P.bL=P.bR=30+30*k; P.armL=P.armR=100; P.elL=P.elR=60;
+  } else if (tau < 10.1){                           // crouch
+    const u=ease((tau-9.8)/.3);
+    P.aL=P.aR=14+10*u; P.bL=P.bR=30+50*u; P.armL=P.armR=40; P.elL=P.elR=30;
+  } else if (tau < 10.7){                           // big jump into the final pose
+    const u=(tau-10.1)/.6, k=4*u*(1-u);
+    P.air=170*k; P.aL=P.aR=24; P.bL=P.bR=80; P.armL=P.armR=40; mix(FIN, ease(u)); P.aL+=20*k; P.bL+=40*k;
+  } else { mix(FIN, 1); P.hTilt += 2*Math.sin(t*6); }
+  return P;
+}
+function renderDancer(t){
+  const on = t>=18.45 && t<31, n = dNode;
+  n.dancer.setAttribute('opacity', on ? Math.min(1,(t-18.45)/.1) : 0);
+  if (!on) return;
+  const P = dancerPose(t);
+  const ext = (a,b)=> 96*Math.cos(a*D) + 104*Math.cos((a-b)*D) + 14;
+  const hipY = GROUND - SC*Math.max(ext(P.aL,P.bL), ext(P.aR,P.bR)) - P.air, cx = 270+P.x;
+  n.dBody.setAttribute('transform', `translate(${cx} ${hipY}) scale(${SC*P.sx} ${SC})`);
+  n.dLegL.setAttribute('transform', `translate(-30 0) rotate(${P.aL})`);
+  n.dKneeL.setAttribute('transform', `translate(0 96) rotate(${-P.bL})`);
+  n.dLegR.setAttribute('transform', `translate(30 0) rotate(${-P.aR})`);
+  n.dKneeR.setAttribute('transform', `translate(0 96) rotate(${P.bR})`);
+  n.dTorso.setAttribute('transform', `rotate(${P.tTilt})`);
+  n.dArmL.setAttribute('transform', `translate(-72 -158) rotate(${P.armL})`);
+  n.dElbL.setAttribute('transform', `translate(0 60) rotate(${-P.elL})`);
+  n.dArmR.setAttribute('transform', `translate(72 -158) rotate(${-P.armR})`);
+  n.dElbR.setAttribute('transform', `translate(0 60) rotate(${P.elR})`);
+  n.dHead.setAttribute('transform', `translate(0 -168) rotate(${P.hTilt} 0 -40) scale(.95)`);
+  n.dShadow.setAttribute('cx', cx);
+  n.dShadow.setAttribute('rx', 80 - P.air*.2);
+  n.dShadow.setAttribute('opacity', Math.max(.3, 1 - P.air/250));
 }
 
 /* ---- confetti burst for the finale ---- */
@@ -202,7 +291,7 @@ const cv=$('cf'), ctx=cv.getContext('2d'); let W,H,dpr;
 function resize(){ dpr=Math.min(devicePixelRatio||1,2); W=cv.width=innerWidth*dpr; H=cv.height=innerHeight*dpr; }
 addEventListener('resize',resize); resize();
 const colors=['#ff6f91','#ffd166','#06d6a0','#4cc9f0','#b388ff','#ff9f1c'];
-let bits=[]; let burst=false;
+let bits=[]; let burst=false, burst2=false;
 function spawn(){ for(let i=0;i<140;i++) bits.push({x:rnd(0,W),y:rnd(-H*.3,0),vy:rnd(2,5)*dpr,vx:rnd(-1.5,1.5)*dpr,w:rnd(6,12)*dpr,h:rnd(10,18)*dpr,r:rnd(0,6.3),vr:rnd(-.2,.2),c:colors[Math.random()*6|0],ph:rnd(0,6.3)}); }
 function drawConfetti(t){
   ctx.clearRect(0,0,W,H);
@@ -217,7 +306,8 @@ const frozen = new URLSearchParams(location.search).get('t');
 let start = performance.now(), last = 0;
 function tick(now){
   const t = frozen!==null ? parseFloat(frozen) : ((now-start)/1000) % LOOP;
-  if (t < last) { burst=false; bits=[]; }
+  if (t < last) { burst=false; burst2=false; bits=[]; }
+  if (!burst2 && t>=29.2) { burst2=true; spawn(); }
   if (!burst && t>=19.3) { burst=true; spawn(); }
   last = t;
   render(t); drawConfetti(t);
@@ -225,7 +315,7 @@ function tick(now){
 }
 if (frozen!==null && parseFloat(frozen)>=19.3) { spawn(); for(let i=0;i<40;i++) bits.forEach(b=>{b.y+=b.vy;}); }
 requestAnimationFrame(tick);
-addEventListener('pointerdown', ()=>{ start=performance.now(); burst=false; bits=[]; });
+addEventListener('pointerdown', ()=>{ start=performance.now(); burst=false; burst2=false; bits=[]; });
 </script>
 </body>
 </html>
