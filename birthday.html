@@ -47,7 +47,7 @@
     <!-- name banner -->
     <g id="banner" opacity="0">
       <text id="nameText" x="270" y="205" text-anchor="middle" font-size="110" font-weight="900" fill="#fff" stroke="#ff6f91" stroke-width="14" paint-order="stroke" stroke-linejoin="round">宋康阳</text>
-      <text id="subText" x="270" y="268" text-anchor="middle" font-size="40" font-weight="800" fill="#ff6f91" letter-spacing="10">生日快乐!</text>
+      <text id="subText" x="270" y="268" text-anchor="middle" font-size="38" font-weight="800" fill="#ff6f91" letter-spacing="8">4岁 生日快乐!</text>
     </g>
 
     <!-- chair -->
@@ -142,7 +142,7 @@
     </g>
   </g>
 </svg>
-<div id="start" class="overlay"><div class="small">🎂 送给你的生日礼物</div><h1>宋康阳</h1><div class="sub">的生日派对</div><button id="go">点一下 开始 ▶</button></div>
+<div id="start" class="overlay"><div class="small">🎂 送给你的生日礼物</div><h1>宋康阳</h1><div class="sub">的 4 岁生日派对</div><button id="go">点一下 开始 ▶</button></div>
 <div id="end" class="overlay"><div class="t">🎉 宋康阳 生日快乐 🎉</div><button id="again">再来一次</button></div>
 </div>
 <button id="mute" aria-label="声音">🔊</button>
@@ -403,14 +403,14 @@ const vCrane = ()=>`<g><rect x="-74" y="-28" width="148" height="14" rx="5" fill
 
 /* ---- scenes & game state ---- */
 const params = new URLSearchParams(location.search);
-const TOTAL=6, BASE=852, BW=170, BH_=44;
+const TOTAL=4, BASE=852, BW=180, BH_=56;
 let state='start', stateT=performance.now(), showStart=0;
 const tower=$('tower'), vehicles=$('vehicles'), mover=$('mover'), cake=$('cake'), candles=$('candles'), fx=$('fx'), startVeh=$('startVeh'), hud=$('hud'), hudSub=$('hudSub'), chairG=$('chair'), gameG=$('game');
 let placed=[], mv={x:270,y:0,vy:0,falling:false,ph:0}, sway=0, swayV=0, vehs=[], fxItems=[], lit=0, gameOpacity=1;
 
 function blockG(){
   const g=document.createElementNS(NS,'g');
-  g.innerHTML=`<rect x="${-BW/2}" y="0" width="${BW}" height="${BH_}" rx="6" fill="#e8a93a" stroke="#9a6b1a" stroke-width="3"/><g stroke="#c98a22" stroke-width="3">${[-64,-48,-32,32,48,64].map(x=>`<line x1="${x}" y1="6" x2="${x}" y2="${BH_-6}"/>`).join('')}</g><rect x="-22" y="8" width="44" height="28" rx="5" fill="#c62828"/><circle cx="0" cy="22" r="8" fill="#ffd166"/>`;
+  g.innerHTML=`<rect x="${-BW/2}" y="0" width="${BW}" height="${BH_}" rx="6" fill="#e8a93a" stroke="#9a6b1a" stroke-width="3"/><g stroke="#c98a22" stroke-width="3">${[-64,-48,-32,32,48,64].map(x=>`<line x1="${x}" y1="6" x2="${x}" y2="${BH_-6}"/>`).join('')}</g><rect x="-24" y="11" width="48" height="34" rx="5" fill="#c62828"/><circle cx="0" cy="28" r="9" fill="#ffd166"/>`;
   return g;
 }
 const topY = n => BASE - BH_*n;
@@ -442,7 +442,7 @@ function land(){
   if(perfect){ sfx.perfect(); addFx('Perfect!',x,topY(c)-10,'#ff6f91'); } else sfx.land();
   setHud('叠高高 '+c+'/'+TOTAL,'点一下屏幕，放下积木 👆');
   if(c===2) addVehicle('car',90);
-  if(c===4) addVehicle('exc',270);
+  if(c===3) addVehicle('exc',270);
   if(c===TOTAL){ addVehicle('crane',450); finishStack(); } else newMover();
 }
 function finishStack(){
@@ -450,9 +450,9 @@ function finishStack(){
   const x=placed[placed.length-1].x;
   cake.setAttribute('transform',`translate(${x} 200)`); cake.setAttribute('opacity',1); cake._x=x;
   candles.innerHTML='';
-  [-30,0,30].forEach((cx,i)=>{ const g=document.createElementNS(NS,'g'); g.setAttribute('transform',`translate(${cx} -84)`);
+  [-33,-11,11,33].forEach((cx,i)=>{ const g=document.createElementNS(NS,'g'); g.setAttribute('transform',`translate(${cx} -84)`);
     g.innerHTML=`<rect x="-5" y="-30" width="10" height="30" rx="2" fill="#4cc9f0"/><path class="fl" d="M0 -36 q-9-12 0-26 q9 14 0 26z" fill="#ffb703"/><path d="M0 -36 q-4-7 0-14 q4 7 0 14z" fill="#fff3b0"/>`; candles.appendChild(g); });
-  lit=3;
+  lit=4;
 }
 function blowNext(){
   const fl=[...candles.children].filter(g=>!g._off)[0]; if(!fl) return;
@@ -533,7 +533,7 @@ if(preset && preset!=='start'){
   if(preset==='stack'||preset==='candles'||preset==='show'){
     const n = preset==='stack' ? +(params.get('n')||3) : TOTAL;
     for(let i=0;i<n;i++) addPlaced(270+[0,22,-18,30,-8,12][i]);
-    if(n>=2) addVehicle('car',90); if(n>=4) addVehicle('exc',270); if(n>=6) addVehicle('crane',450);
+    if(n>=2) addVehicle('car',90); if(n>=3) addVehicle('exc',270); if(n>=4) addVehicle('crane',450);
     vehs.forEach(v=>v.x=v.tx);
     if(preset==='stack'){ state='stack'; setHud('叠高高 '+n+'/'+TOTAL,'点一下屏幕，放下积木 👆'); newMover(); mv.x=210; mv.y=topY(n+1)-130; }
     else { finishStack(); cake.setAttribute('transform',`translate(${cake._x} ${topY(TOTAL)})`); cake._y=0; state='candles'; setHud('吹蜡烛！','点一下，吹灭一根蜡烛 🎂'); if(preset==='show'){ showStart=performance.now()-(frozenT||0)*1000; state='show'; setHud('',''); gameOpacity=0; } }
