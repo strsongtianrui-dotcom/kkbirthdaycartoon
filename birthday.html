@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>宋康阳 生日派对</title>
+<style>
+  * { margin:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { height:100%; overflow:hidden; background:#2b2d42; touch-action:manipulation; user-select:none; }
+  #wrap { position:fixed; left:50%; top:50%; width:min(100vw,56.25vh); height:min(177.78vw,100vh); transform:translate(-50%,-50%); container-type:size; overflow:hidden; }
+  #wrap > svg { position:absolute; inset:0; width:100%; height:100%; }
+  canvas { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; }
+  .overlay { position:absolute; left:0; right:0; display:flex; flex-direction:column; align-items:center; text-align:center; pointer-events:none; font-family:"PingFang SC","Microsoft YaHei",sans-serif; }
+  #start { top:22%; }
+  #start .small { font-size:5.5cqw; font-weight:800; color:#6a1b9a; letter-spacing:.2em; }
+  #start h1 { font-size:21cqw; font-weight:900; color:#fff; -webkit-text-stroke:2cqw #ff6f91; paint-order:stroke fill; line-height:1.1; animation:bob 2.2s ease-in-out infinite; }
+  #start .sub { font-size:8cqw; font-weight:900; color:#ff6f91; letter-spacing:.3em; margin-top:1cqw; text-shadow:0 0 6px #fff,0 0 6px #fff; }
+  button { font-family:inherit; cursor:pointer; border:0; }
+  #go, #again { margin-top:7cqw; pointer-events:auto; font-size:7cqw; font-weight:900; color:#fff; background:linear-gradient(#ff8fab,#ff4d6d); padding:3cqw 9cqw; border-radius:99cqw; box-shadow:0 1.2cqw 0 #c9184a,0 3cqw 6cqw rgba(0,0,0,.25); animation:pulse 1.1s ease-in-out infinite; }
+  #end { left:auto; right:3cqw; bottom:2cqw; width:auto; display:none; }
+  #end .t { display:none; }
+  #end #again { margin-top:0; font-size:5cqw; padding:2cqw 6cqw; }
+  #end.on { display:flex; }
+  @keyframes bob { 0%,100%{ transform:translateY(0) rotate(-2deg);} 50%{ transform:translateY(-1.5cqw) rotate(2deg);} }
+  @keyframes pulse { 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.07);} }
+  #mute { position:fixed; right:12px; top:12px; width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,.85); font-size:22px; z-index:5; }
+</style>
+</head>
+<body>
+<div id="wrap">
+<svg id="s" viewBox="0 0 540 960" preserveAspectRatio="xMidYMid meet" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="tableShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e2ad68"/><stop offset="1" stop-color="#c88f4c"/>
+    </linearGradient>
+    <clipPath id="screen"><rect width="540" height="960"/></clipPath>
+  </defs>
+  <g clip-path="url(#screen)">
+    <!-- wall -->
+    <rect width="540" height="960" fill="#eceff1"/>
+    <rect y="600" width="540" height="40" fill="#dfe3e6"/>
+
+    <!-- bunting -->
+    <path d="M-10 30 Q270 130 550 30" fill="none" stroke="#8d6e63" stroke-width="3"/>
+    <g id="flags"></g>
+
+    <!-- name banner -->
+    <g id="banner" opacity="0">
+      <text id="nameText" x="270" y="205" text-anchor="middle" font-size="110" font-weight="900" fill="#fff" stroke="#ff6f91" stroke-width="14" paint-order="stroke" stroke-linejoin="round">宋康阳</text>
+      <text id="subText" x="270" y="268" text-anchor="middle" font-size="40" font-weight="800" fill="#ff6f91" letter-spacing="10">生日快乐!</text>
+    </g>
+
+    <!-- chair -->
+    <g id="chair" stroke="#5d4037" stroke-width="5" stroke-linejoin="round">
+      <path d="M95 650 V520 Q95 470 150 470 H390 Q445 470 445 520 V650 Z" fill="#8d6e63"/>
+      <g fill="#a1887f"><rect x="150" y="490" width="22" height="160" rx="8"/><rect x="210" y="480" width="22" height="170" rx="8"/><rect x="270" y="478" width="22" height="172" rx="8"/><rect x="330" y="480" width="22" height="170" rx="8"/><rect x="385" y="490" width="22" height="160" rx="8"/></g>
+      <rect x="85" y="600" width="370" height="60" rx="14" fill="#37474f"/>
+    </g>
+
+    <!-- character -->
+    <g id="body">
+      <!-- arms -->
+      <g id="armL"><g id="armLin">
+        <rect x="-19" y="-6" width="38" height="70" rx="19" fill="#3f6fe0"/>
+        <g id="foreL"><rect x="-15" y="52" width="30" height="62" rx="15" fill="#f6c9a3"/><circle cx="0" cy="118" r="19" fill="#f6c9a3"/></g>
+      </g></g>
+      <g id="armR"><g id="armRin">
+        <rect x="-19" y="-6" width="38" height="70" rx="19" fill="#3f6fe0"/>
+        <g id="foreR"><rect x="-15" y="52" width="30" height="62" rx="15" fill="#f6c9a3"/><circle cx="0" cy="118" r="19" fill="#f6c9a3"/></g>
+      </g></g>
+      <!-- torso -->
+      <path d="M-98 20 Q-98 -12 -55 -18 H55 Q98 -12 98 20 L112 420 H-112 Z" fill="#3f6fe0"/>
+      <path d="M-34 -18 Q0 22 34 -18" fill="#f6c9a3" stroke="#2f58c0" stroke-width="5"/>
+      <rect x="-24" y="-50" width="48" height="40" fill="#f6c9a3"/>
+      <!-- head -->
+      <g id="head">
+        <circle cx="-79" cy="-118" r="19" fill="#f6c9a3"/><circle cx="79" cy="-118" r="19" fill="#f6c9a3"/>
+        <circle cx="0" cy="-120" r="80" fill="#f9d3af"/>
+        <path d="M-82 -125 A82 82 0 0 1 82 -125 Q60 -158 20 -160 Q-30 -160 -82 -125Z" fill="#2a2320"/>
+        <g id="eyes">
+          <g id="eyeL"><ellipse cx="-30" cy="-116" rx="14" ry="17" fill="#fff"/><circle class="pupil" cx="-30" cy="-114" r="9" fill="#2a2320"/><circle class="shine" cx="-27" cy="-119" r="3" fill="#fff"/></g>
+          <g id="eyeR"><ellipse cx="30" cy="-116" rx="14" ry="17" fill="#fff"/><circle class="pupil" cx="30" cy="-114" r="9" fill="#2a2320"/><circle class="shine" cx="33" cy="-119" r="3" fill="#fff"/></g>
+        </g>
+        <path d="M-48 -142 Q-30 -152 -14 -142" fill="none" stroke="#2a2320" stroke-width="5" stroke-linecap="round"/>
+        <path d="M14 -142 Q30 -152 48 -142" fill="none" stroke="#2a2320" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="-52" cy="-86" r="13" fill="#ff9aa2" opacity=".6"/><circle cx="52" cy="-86" r="13" fill="#ff9aa2" opacity=".6"/>
+        <path d="M-4 -98 Q0 -92 4 -98" fill="none" stroke="#d99a7a" stroke-width="4" stroke-linecap="round"/>
+        <path id="mClosed" d="M-20 -76 Q0 -62 20 -76" fill="none" stroke="#a5493d" stroke-width="5" stroke-linecap="round"/>
+        <g id="mOpen"><path d="M-24 -80 Q0 -40 24 -80 Z" fill="#7a2a2a"/><path d="M-12 -62 Q0 -52 12 -62 Q0 -68 -12 -62Z" fill="#ff7a8a"/></g>
+        <!-- party hat -->
+        <g id="hat" opacity="0">
+          <path d="M-45 -188 L0 -290 L45 -188 Z" fill="#ff6f91"/>
+          <path d="M-33 -214 L33 -214 L25 -232 L-25 -232Z" fill="#ffd166"/>
+          <circle cx="0" cy="-292" r="13" fill="#4cc9f0"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- hands resting on table (in front of table, drawn after table) -->
+    <!-- table -->
+    <g id="table">
+      <rect y="620" width="540" height="340" fill="url(#tableShade)"/>
+      <rect y="620" width="540" height="10" fill="#a8743a"/>
+      <g id="grain" fill="none" stroke="#b9843f" stroke-width="2" opacity=".55"></g>
+    </g>
+    <g id="hands" opacity="0">
+      <ellipse cx="-118" cy="650" rx="44" ry="17" fill="#f6c9a3"/><circle cx="-150" cy="656" r="19" fill="#f6c9a3"/>
+      <ellipse cx="118" cy="650" rx="44" ry="17" fill="#f6c9a3"/><circle cx="150" cy="656" r="19" fill="#f6c9a3"/>
+    </g>
+
+    <g id="game">
+      <g id="startVeh"></g>
+      <g id="tower"></g>
+      <g id="vehicles"></g>
+      <g id="mover"></g>
+      <g id="cake" opacity="0">
+        <rect x="-62" y="-46" width="124" height="46" rx="12" fill="#ffb3c6"/>
+        <rect x="-42" y="-84" width="84" height="42" rx="11" fill="#ffd6e0"/>
+        <path d="M-62 -34 q10 16 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 v-12 h-120z" fill="#fff"/>
+        <path d="M-42 -72 q9 14 17 0 t17 0 t17 0 t17 0 v-12 h-68z" fill="#fff"/>
+        <g fill="#ff4d6d"><circle cx="-38" cy="-12" r="5"/><circle cx="0" cy="-10" r="5"/><circle cx="38" cy="-12" r="5"/></g>
+        <g id="candles"></g>
+      </g>
+      <g id="fx"></g>
+      <text id="hud" x="270" y="222" text-anchor="middle" font-size="46" font-weight="900" fill="#ff6f91" stroke="#fff" stroke-width="9" paint-order="stroke" stroke-linejoin="round"></text>
+      <text id="hudSub" x="270" y="268" text-anchor="middle" font-size="27" font-weight="800" fill="#6a1b9a" stroke="#fff" stroke-width="6" paint-order="stroke" stroke-linejoin="round"></text>
+    </g>
+    <g id="dancer" opacity="0">
+      <ellipse id="dShadow" cx="270" cy="892" rx="80" ry="14" fill="rgba(70,35,0,.28)"/>
+      <g id="dBody">
+        <g id="dLegL"><rect x="-19" y="-6" width="38" height="106" rx="19" fill="#14161f"/><g id="dKneeL"><rect x="-17" y="-4" width="34" height="104" rx="17" fill="#14161f"/><ellipse cx="0" cy="90" rx="19" ry="9" fill="#fff"/><ellipse cx="0" cy="104" rx="30" ry="14" fill="#0b0b0b" stroke="#6b6b7b" stroke-width="3"/></g></g>
+        <g id="dLegR"><rect x="-19" y="-6" width="38" height="106" rx="19" fill="#14161f"/><g id="dKneeR"><rect x="-17" y="-4" width="34" height="104" rx="17" fill="#14161f"/><ellipse cx="0" cy="90" rx="19" ry="9" fill="#fff"/><ellipse cx="0" cy="104" rx="30" ry="14" fill="#0b0b0b" stroke="#6b6b7b" stroke-width="3"/></g></g>
+        <g id="dTorso">
+          <path d="M-62 4 Q-72 -80 -66 -150 Q-64 -176 -40 -178 H40 Q64 -176 66 -150 Q72 -80 62 4 Z" fill="#1d1d2b"/><path d="M-26 -178 L0 -128 L26 -178 Z" fill="#fff"/>
+          <rect x="-64" y="-12" width="128" height="14" rx="6" fill="#000"/><rect x="-9" y="-13" width="18" height="16" rx="3" fill="#ffd166"/>
+          <rect x="-22" y="-214" width="44" height="46" rx="10" fill="#f6c9a3"/>
+          <g id="dArmL"><rect x="-19" y="-6" width="38" height="66" rx="19" fill="#1d1d2b"/><g id="dElbL"><rect x="-15" y="-6" width="30" height="62" rx="15" fill="#f6c9a3"/><circle cx="0" cy="58" r="18" fill="#f6c9a3"/></g></g>
+          <g id="dArmR"><rect x="-19" y="-6" width="38" height="66" rx="19" fill="#1d1d2b"/><g id="dElbR"><rect x="-15" y="-6" width="30" height="62" rx="15" fill="#f6c9a3"/><circle cx="0" cy="58" r="19" fill="#fff" stroke="#cfd8dc" stroke-width="2"/><g transform="translate(18 44)"><path id="dSpark" d="M0 -14 L3 -3 L14 0 L3 3 L0 14 L-3 3 L-14 0 L-3 -3Z" fill="#fff" stroke="#ffd166" stroke-width="1.5"/></g></g></g>
+          <g id="dHead"></g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
+<div id="start" class="overlay"><div class="small">🎂 送给你的生日礼物</div><h1>宋康阳</h1><div class="sub">的生日派对</div><button id="go">点一下 开始 ▶</button></div>
+<div id="end" class="overlay"><div class="t">🎉 宋康阳 生日快乐 🎉</div><button id="again">再来一次</button></div>
+</div>
+<button id="mute" aria-label="声音">🔊</button>
+<canvas id="cf"></canvas>
+<script>
+const $ = id => document.getElementById(id);
+const rnd = (a,b)=>a+Math.random()*(b-a);
+const NS = 'http://www.w3.org/2000/svg';
+const LOOP = 32;
+
+/* ---- scenery ---- */
+(function(){
+  const flags = $('flags'), txt = ['生','日','快','乐','!'], cols = ['#ff6f91','#ffd166','#06d6a0','#4cc9f0','#b388ff'];
+  for (let i=0;i<5;i++){
+    const x = 60 + i*105, y = 30 + Math.sin((x/540)*Math.PI)*62 + 8;
+    const g = document.createElementNS(NS,'g');
+    g.innerHTML = `<path d="M${x-30} ${y} L${x+30} ${y} L${x} ${y+62}Z" fill="${cols[i]}"/><text x="${x}" y="${y+30}" text-anchor="middle" font-size="26" font-weight="900" fill="#fff">${txt[i]}</text>`;
+    flags.appendChild(g);
+  }
+  const grain = $('grain');
+  for (let i=0;i<22;i++){
+    const y = 640 + i*15 + rnd(-3,3), p = document.createElementNS(NS,'path');
+    let d = `M-10 ${y}`;
+    for (let x=0;x<=560;x+=70) d += ` Q${x+35} ${y+rnd(-6,6)} ${x+70} ${y+rnd(-2,2)}`;
+    p.setAttribute('d', d); grain.appendChild(p);
+  }
+})();
+
+/* ---- choreography (imitates the video) ----
+   [t, x, rise, tilt, head, drop, lookX, mouth, armR, armL, hands] */
+const KF = [
+ [0,    0, .62,  0, 10, 30,  .3, 0, 10, 10, 1],  // leaning on table, looking down
+ [1.5, 10, .60,  2, 12, 34,  .2, 0, 12,  8, 1],
+ [3,    0, .62,  0, 10, 30,  .3, 0, 10, 10, 1],
+ [3.6, 70, .50, 20, 15, 20,  .2, 0, 20, 30,.5],  // slides away
+ [4.6,230,-.10, 30, 20,  0,   0, 0,  0,  0, 0],  // gone
+ [5.6,230,-.10, 30, 20,  0,   0, 0,  0,  0, 0],
+ [6.4,  0, .95,  0, -5,  0,   1, 1,  0,  0, 1],  // pops up, smiling
+ [8,  -25, 1.0, -6,-10,  0, -.7, 1,  0,  0, 1],
+ [9,   40, 1.0,  8,  8,  0,  .8, 1, 20,  0, 1],
+ [9.8, 90, .95, 14, 12,  0,   1, 1, 60,  0,.3],  // reaching out
+ [10.8,130,.95, 16, 12,  0,  .6, 1, 80,  0, 0],
+ [11.6,-40,.35,  0, 10,  0,  .2, 0,  0,  0,.6],  // ducks
+ [12.4,-170,.95,-14,-12, 0,  -1, 1,  0, 75, 0],  // pops up on the left
+ [13.4,180,.9,  12, 10,  0,   1, 1, 70,  0, 0],
+ [14.4, 90,.85,  6,  8,  0,  .5, 1,  0,  0, 1],
+ [15.5,-10,.72,  0,-10, 10,   0, 1,  0,  0, 1],  // peeking over the table
+ [17,  10, .68,  0,  6, 14,  .7, 1,  0,  0, 1],
+ [18.2,-10,.72,  0, -6,  8,  .3, 1,  0,  0, 1],
+ [18.5,  0,1.15,  0, -5,  0,   0, 1,  0,  0, 0],  // rises up, about to jump onto the table
+ [31,    0,1.15,  0, -5,  0,   0, 1,  0,  0, 0],  // (the full-body dancer takes over here)
+ [32,    0, .62,  0, 10, 30,  .3, 0, 10, 10, 1]
+];
+const ease = u => u*u*(3-2*u);
+function pose(t){
+  let i = 0; while (i < KF.length-2 && t > KF[i+1][0]) i++;
+  const a = KF[i], b = KF[i+1];
+  const u = ease(Math.min(1, Math.max(0, (t-a[0])/(b[0]-a[0]))));
+  return a.map((v,k)=> v + (b[k]-v)*u);
+}
+
+const body=$('body'), head=$('head'), hands=$('hands'), hat=$('hat');
+const armL=$('armL'), armR=$('armR'), armLin=$('armLin'), armRin=$('armRin'), foreL=$('foreL'), foreR=$('foreR');
+const mOpen=$('mOpen'), mClosed=$('mClosed'), banner=$('banner'), nameText=$('nameText');
+const pupils = [...document.querySelectorAll('.pupil')], shines = [...document.querySelectorAll('.shine')];
+const eyes = [$('eyeL'), $('eyeR')];
+
+const armAngle = a => a*0.7 + 100*Math.min(1, Math.max(0,a)/15);
+function render(t){
+  let [,x,rise,tilt,hd,drop,look,mouth,aR,aL,hnd] = pose(t);
+  const bob = Math.sin(t*4)*3;
+  // quick wiggle just before the party hat
+  if (t>19 && t<20.4) x += Math.sin(t*38)*8;
+  if (t>17.2 && t<18) hd += Math.sin(t*30)*5;
+  const oy = 940 - rise*330 + bob;
+  body.setAttribute('transform', `translate(${270+x} ${oy}) rotate(${tilt})`);
+  head.setAttribute('transform', `translate(0 ${drop}) rotate(${hd} 0 -50)`);
+  // arms: pivot at shoulders
+  const wave = Math.sin(t*14)*14;
+  armR.setAttribute('transform', `translate(92 14) rotate(${-armAngle(aR)})`);
+  armL.setAttribute('transform', `translate(-92 14) rotate(${armAngle(aL)})`);
+  armRin.setAttribute('transform', '');
+  foreR.setAttribute('transform', aR>20 ? `rotate(${-wave} 0 56)` : '');
+  foreL.setAttribute('transform', aL>20 ? `rotate(${wave} 0 56)` : '');
+  // face
+  pupils.forEach((p,k)=>{ p.setAttribute('transform', `translate(${look*6} ${drop/8})`); shines[k].setAttribute('transform', `translate(${look*6} ${drop/8})`); });
+  const blink = (t%3.1) < .12 ? .1 : 1;
+  eyes.forEach((e,k)=> e.setAttribute('transform', `translate(${k?30:-30} -116) scale(1 ${blink}) translate(${k?-30:30} 116)`));
+  mOpen.setAttribute('transform', `translate(0 -76) scale(1 ${Math.max(.01,mouth)}) translate(0 76)`);
+  mOpen.setAttribute('opacity', mouth>.05?1:0);
+  mClosed.setAttribute('opacity', mouth>.5?0:1);
+  // hands on the table follow the body
+  hands.setAttribute('transform', `translate(${270+x} 0)`);
+  // who is on stage: peeking boy (behind the table) or full-body dancer (on it)
+  const bodyOn = (t<18.45 || t>=31) ? 1 : 0;
+  body.setAttribute('opacity', bodyOn);
+  hands.setAttribute('opacity', bodyOn * Math.max(0, hnd) * Math.min(1, Math.max(0, rise*3)));
+  renderDancer(t);
+  const bu = Math.min(1, Math.max(0, (t-19.3)/.7));
+  const sc = bu<1 ? 1 + Math.sin(bu*Math.PI)*.35 : 1 + Math.sin(t*5)*.03;
+  banner.setAttribute('opacity', t>=19.3 && t<31 ? bu : 0);
+  banner.setAttribute('transform', `translate(270 235) scale(${sc}) translate(-270 -235)`);
+}
+
+/* ---- full-body dancer ---- */
+const D = Math.PI/180, GROUND = 892, SC = .9;
+(function(){ // reuse the face (with party hat) for the dancer
+  const hc = head.cloneNode(true);
+  hc.removeAttribute('transform');
+  const open = hc.querySelector('#mOpen'), closed = hc.querySelector('#mClosed'), h = hc.querySelector('#hat');
+  open.setAttribute('opacity',1); open.removeAttribute('transform'); closed.setAttribute('opacity',0); h.setAttribute('opacity',0);
+  hc.insertAdjacentHTML('beforeend','<g transform="rotate(-7 0 -170)"><ellipse cx="0" cy="-172" rx="104" ry="19" fill="#121212"/><path d="M-60 -176 Q-62 -256 0 -256 Q62 -256 60 -176 Z" fill="#222"/><path d="M-60 -176 Q0 -164 60 -176 L60 -196 Q0 -184 -60 -196 Z" fill="#ff6f91"/><path d="M-30 -250 Q0 -262 30 -250" fill="none" stroke="#3a3a3a" stroke-width="5" stroke-linecap="round"/></g>');
+  hc.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id')); hc.removeAttribute('id');
+  $('dHead').appendChild(hc);
+})();
+const dNode = Object.fromEntries(['dancer','dShadow','dBody','dLegL','dLegR','dKneeL','dKneeR','dTorso','dArmL','dArmR','dElbL','dElbR','dHead','dSpark'].map(k=>[k,$(k)]));
+
+const lerp = (a,b,f)=>a+(b-a)*f;
+function blend(A,B,f){ const o={}; for(const k in A) o[k]=lerp(A[k],B[k],f); return o; }
+function dancerPose(t){
+  const P = {x:0,air:0,aL:10,bL:15,aR:10,bR:15,tTilt:0,hTilt:0,armL:20,elL:10,armR:20,elR:10,sx:1};
+  const FIN = {aL:10,bL:15,aR:22,bR:5,armL:55,elL:0,armR:120,elR:-100,hTilt:-8,tTilt:6};
+  const mix = (o,u)=>{ for(const k in o) P[k] = lerp(P[k], o[k], u); };
+  if (t < 19.3){                                    // jump up onto the table
+    const u=(t-18.5)/.8, k=4*u*(1-u);
+    P.air=190*k; P.aL=P.aR=12+25*k; P.bL=P.bR=25+55*k; P.armL=P.armR=60+70*k; P.elL=P.elR=20; return P;
+  }
+  const tau=t-19.3, w=4*Math.PI;
+  if (tau < 2.4){                                   // A: hat tip, then point to the sky
+    const c=Math.cos(w*tau), k=tau<1.4 ? Math.sin(Math.PI*tau/1.4) : 0, k2=tau>=1.4 ? Math.sin(Math.PI*(tau-1.4)/1.0) : 0;
+    P.aL=P.aR=10+2*c; P.bL=P.bR=18+8*c;
+    P.armR=20+100*k; P.elR=10-110*k; P.armL=20+135*k2; P.elL=10-10*k2;
+    P.hTilt=-8*k+8*k2; P.tTilt=4*Math.sin(w*tau/2);
+  } else if (tau < 4.8){                            // B: moonwalk, gliding across the table
+    const q=tau-2.4, s=Math.sin(2*Math.PI*q/.8), lf=Math.max(0,s), rf=Math.max(0,-s);
+    P.x=130-260*(q/2.4);
+    P.aL=8+6*lf; P.bL=4+42*lf; P.aR=8+6*rf; P.bR=4+42*rf;
+    P.tTilt=5*s; P.hTilt=-4*s; P.armL=25+15*s; P.armR=25-15*s; P.elL=P.elR=20;
+  } else if (tau < 7.2){                            // C: robot, snapping from pose to pose
+    const st=(tau-4.8)/.3, i=Math.floor(st), f=ease(Math.min(1,(st-i)*4));
+    const poses=[[90,90,-90,-90],[90,90,90,90],[170,5,0,0],[5,170,0,0],[40,40,-100,-100]];
+    const pv=poses[(i+4)%5], cu=poses[i%5], hs=(i%2?-1:1);
+    P.armL=lerp(pv[0],cu[0],f); P.armR=lerp(pv[1],cu[1],f); P.elL=lerp(pv[2],cu[2],f); P.elR=lerp(pv[3],cu[3],f);
+    P.hTilt=14*hs*(2*f-1); P.tTilt=5*hs*(2*f-1);
+    P.aL=P.aR=8; P.bL=P.bR=14+10*Math.cos(2*Math.PI*st);
+  } else if (tau < 9.0){                            // D: kick and point, alternating sides
+    const st=(tau-7.2)*4, i=Math.floor(st), f=ease(Math.min(1,(st-i)*4));
+    const A={armR:150,elR:0,armL:25,elL:60,aL:6,bL:75,aR:10,bR:10,tTilt:-8,hTilt:10};
+    const B={armL:150,elL:0,armR:25,elR:60,aR:6,bR:75,aL:10,bL:10,tTilt:8,hTilt:-10};
+    const pose = blend(i%2?A:B, i%2?B:A, f);
+    Object.assign(P, pose); P.air=10*Math.sin(Math.PI*(st-i));
+  } else if (tau < 9.8){                            // E: spin on the toes
+    const q=(tau-9)/.8, k=Math.sin(Math.PI*q); let cs=Math.cos(2*Math.PI*q);
+    if (Math.abs(cs)<.08) cs = cs<0 ? -.08 : .08;
+    P.sx=cs; P.air=24*k; P.aL=P.aR=3; P.bL=P.bR=0; P.armL=P.armR=22; P.elL=P.elR=100; P.tTilt=0;
+  } else if (tau < 10.1){                           // crouch
+    const u=ease((tau-9.8)/.3);
+    P.aL=P.aR=10+14*u; P.bL=P.bR=15+60*u; P.armL=P.armR=30; P.elL=P.elR=20;
+  } else if (tau < 10.7){                           // jump into the final pose
+    const u=(tau-10.1)/.6, k=4*u*(1-u);
+    P.air=150*k; P.aL=P.aR=24; P.bL=P.bR=75; P.armL=P.armR=40; mix(FIN, ease(u)); P.aL+=16*k; P.bL+=40*k;
+  } else { mix(FIN, 1); P.hTilt += 1.5*Math.sin(t*6); }
+  return P;
+}
+function renderDancer(t){
+  const on = t>=18.45 && t<31, n = dNode;
+  n.dancer.setAttribute('opacity', on ? Math.min(1,(t-18.45)/.1) : 0);
+  if (!on) return;
+  const P = dancerPose(t);
+  const ext = (a,b)=> 96*Math.cos(a*D) + 104*Math.cos((a-b)*D) + 14;
+  const hipY = GROUND - SC*Math.max(ext(P.aL,P.bL), ext(P.aR,P.bR)) - P.air, cx = 270+P.x;
+  n.dBody.setAttribute('transform', `translate(${cx} ${hipY}) scale(${SC*P.sx} ${SC})`);
+  n.dLegL.setAttribute('transform', `translate(-30 0) rotate(${P.aL})`);
+  n.dKneeL.setAttribute('transform', `translate(0 96) rotate(${-P.bL})`);
+  n.dLegR.setAttribute('transform', `translate(30 0) rotate(${-P.aR})`);
+  n.dKneeR.setAttribute('transform', `translate(0 96) rotate(${P.bR})`);
+  n.dTorso.setAttribute('transform', `rotate(${P.tTilt})`);
+  n.dArmL.setAttribute('transform', `translate(-72 -158) rotate(${P.armL})`);
+  n.dElbL.setAttribute('transform', `translate(0 60) rotate(${-P.elL})`);
+  n.dArmR.setAttribute('transform', `translate(72 -158) rotate(${-P.armR})`);
+  n.dElbR.setAttribute('transform', `translate(0 60) rotate(${P.elR})`);
+  n.dHead.setAttribute('transform', `translate(0 -168) rotate(${P.hTilt} 0 -40) scale(.95)`);
+  const sp=Math.abs(Math.sin(t*9)); n.dSpark.setAttribute('transform',`scale(${.4+.9*sp})`); n.dSpark.setAttribute('opacity',.4+.6*sp);
+  n.dShadow.setAttribute('cx', cx);
+  n.dShadow.setAttribute('rx', 80 - P.air*.2);
+  n.dShadow.setAttribute('opacity', Math.max(.3, 1 - P.air/250));
+}
+
+/* ---- canvas fx: confetti, fireworks, smoke ---- */
+const cv=$('cf'), ctx=cv.getContext('2d'), wrap=$('wrap'); let W,H,dpr;
+function resize(){ dpr=Math.min(devicePixelRatio||1,2); W=cv.width=innerWidth*dpr; H=cv.height=innerHeight*dpr; }
+addEventListener('resize',resize); resize();
+const colors=['#ff6f91','#ffd166','#06d6a0','#4cc9f0','#b388ff','#ff9f1c'];
+let bits=[], sparks=[];
+function spawn(){ for(let i=0;i<140;i++) bits.push({x:rnd(0,W),y:rnd(-H*.3,0),vy:rnd(2,5)*dpr,vx:rnd(-1.5,1.5)*dpr,w:rnd(6,12)*dpr,h:rnd(10,18)*dpr,r:rnd(0,6.3),vr:rnd(-.2,.2),c:colors[Math.random()*6|0],ph:rnd(0,6.3)}); }
+function toCanvas(x,y){ const r=wrap.getBoundingClientRect(); return [(r.left+x/540*r.width)*dpr, (r.top+y/960*r.height)*dpr]; }
+function firework(x,y){
+  const [cx,cy]=toCanvas(x,y), c=colors[Math.random()*6|0];
+  for(let i=0;i<64;i++){ const a=i/64*6.283, sp=rnd(2,7)*dpr; sparks.push({x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,c,k:'f'}); }
+  sfx.pop();
+}
+function smoke(x,y){
+  const [cx,cy]=toCanvas(x,y);
+  for(let i=0;i<9;i++) sparks.push({x:cx+rnd(-6,6)*dpr,y:cy,vx:rnd(-.5,.5)*dpr,vy:-rnd(.6,1.6)*dpr,life:1,c:'#cfd8dc',k:'s'});
+}
+function drawFx(t){
+  ctx.clearRect(0,0,W,H);
+  for(let i=bits.length-1;i>=0;i--){ const b=bits[i]; b.x+=b.vx+Math.sin(t*3+b.ph); b.y+=b.vy; b.r+=b.vr;
+    ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.r); ctx.scale(1,Math.cos(t*6+b.ph)); ctx.fillStyle=b.c; ctx.fillRect(-b.w/2,-b.h/2,b.w,b.h); ctx.restore();
+    if(b.y>H+30) bits.splice(i,1);
+  }
+  for(let i=sparks.length-1;i>=0;i--){ const p=sparks[i];
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.k==='f'){ p.vy+=.08*dpr; p.vx*=.985; p.life-=.014; } else { p.life-=.02; }
+    if(p.life<=0){ sparks.splice(i,1); continue; }
+    ctx.globalAlpha=p.k==='s'?p.life*.7:p.life; ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,(p.k==='s'?(5+(1-p.life)*8):2.6)*dpr,0,6.283); ctx.fill();
+  }
+  ctx.globalAlpha=1;
+}
+
+/* ---- sound (WebAudio, no files needed) ---- */
+let AC=null, master=null, muted=false, melodyGain=null;
+function audioInit(){
+  if(AC) return;
+  try{ AC=new (window.AudioContext||window.webkitAudioContext)(); master=AC.createGain(); master.gain.value=muted?0:.35; master.connect(AC.destination); }catch(e){ AC=null; }
+}
+function tone(f,dur,type,vol,when,slide,dest){
+  if(!AC) return;
+  const t0=AC.currentTime+(when||0), o=AC.createOscillator(), g=AC.createGain();
+  o.type=type||'triangle'; o.frequency.setValueAtTime(f,t0);
+  if(slide) o.frequency.exponentialRampToValueAtTime(Math.max(20,f*slide),t0+dur);
+  g.gain.setValueAtTime(.0001,t0); g.gain.exponentialRampToValueAtTime(vol||.4,t0+.02); g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
+  o.connect(g); g.connect(dest||master); o.start(t0); o.stop(t0+dur+.05);
+}
+const sfx = {
+  tap:()=>tone(520,.12,'square',.12,0,1.4),
+  land:()=>tone(170,.2,'sine',.7,0,.5),
+  perfect:()=>[660,880,1320].forEach((f,i)=>tone(f,.28,'triangle',.4,i*.07)),
+  blow:()=>tone(300,.25,'sawtooth',.08,0,.4),
+  pop:()=>{ tone(140,.3,'sawtooth',.25,0,.3); tone(1000,.12,'square',.07,0,.4); },
+  chime:()=>[523,659,784,1047].forEach((f,i)=>tone(f,.4,'triangle',.4,i*.12))
+};
+const BH=[[392,.75],[392,.25],[440,1],[392,1],[523,1],[494,2],[392,.75],[392,.25],[440,1],[392,1],[587,1],[523,2],[392,.75],[392,.25],[784,1],[659,1],[523,1],[494,1],[440,1],[698,.75],[698,.25],[659,1],[523,1],[587,1],[523,2]];
+function playMelody(){
+  if(!AC) return; stopMelody();
+  melodyGain=AC.createGain(); melodyGain.gain.value=.8; melodyGain.connect(master);
+  let at=0; const beat=.5;
+  for(let loop=0;loop<3;loop++) for(const [f,d] of BH){ tone(f,d*beat*.95,'triangle',.5,at,0,melodyGain); tone(f/2,d*beat*.95,'sine',.18,at,0,melodyGain); at+=d*beat; }
+}
+function stopMelody(){ if(melodyGain&&AC){ melodyGain.gain.setTargetAtTime(0,AC.currentTime,.08); melodyGain=null; } }
+$('mute').addEventListener('click',e=>{ e.stopPropagation(); muted=!muted; $('mute').textContent=muted?'🔇':'🔊'; if(master) master.gain.value=muted?0:.35; });
+
+/* ---- toy vehicles (cartoon versions of the construction trucks) ---- */
+const wheel=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#212121"/><circle cx="${x}" cy="${y}" r="${r*.42}" fill="#b0bec5"/>`;
+const vCar = ()=>`<g><rect x="-56" y="-34" width="112" height="26" rx="11" fill="#1b1b1f"/><path d="M-32 -34 L-20 -58 H26 L40 -34Z" fill="#1b1b1f"/><path d="M-22 -37 L-14 -54 H-2 V-37Z" fill="#8fb8d8"/><path d="M5 -54 H22 L31 -37 H5Z" fill="#8fb8d8"/><circle cx="52" cy="-24" r="4" fill="#ffe066"/><circle cx="-54" cy="-24" r="3.5" fill="#ff5252"/>${wheel(-32,-9,14)}${wheel(34,-9,14)}</g>`;
+const vExc = (id)=>`<g><rect x="-68" y="-26" width="136" height="14" rx="5" fill="#37474f"/><rect x="-6" y="-56" width="64" height="32" rx="7" fill="#f2b705"/><rect x="0" y="-74" width="38" height="28" rx="6" fill="#f2b705"/><rect x="5" y="-70" width="26" height="18" rx="3" fill="#263238"/>${wheel(-42,-13,17)}${wheel(44,-13,17)}<g id="${id}" transform="translate(-6 -46)"><path d="M0 0 L-60 -32 L-84 8" fill="none" stroke="#f2b705" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M-84 8 l-14 20 h28 z" fill="#37474f"/></g></g>`;
+const vCrane = ()=>`<g><rect x="-74" y="-28" width="148" height="14" rx="5" fill="#455a64"/><rect x="-66" y="-44" width="100" height="18" rx="4" fill="#0e9aa7"/><rect x="38" y="-56" width="34" height="30" rx="6" fill="#0e9aa7"/><rect x="48" y="-52" width="20" height="14" rx="3" fill="#cfe9ee"/><path d="M-50 -44 L-92 -108" stroke="#19b5c4" stroke-width="11" stroke-linecap="round"/><path d="M-92 -108 V-70" stroke="#37474f" stroke-width="3"/><rect x="-98" y="-72" width="12" height="10" rx="2" fill="#ffd166"/>${wheel(-50,-10,14)}${wheel(-12,-10,14)}${wheel(52,-10,14)}</g>`;
+
+/* ---- scenes & game state ---- */
+const params = new URLSearchParams(location.search);
+const TOTAL=6, BASE=852, BW=170, BH_=44;
+let state='start', stateT=performance.now(), showStart=0;
+const tower=$('tower'), vehicles=$('vehicles'), mover=$('mover'), cake=$('cake'), candles=$('candles'), fx=$('fx'), startVeh=$('startVeh'), hud=$('hud'), hudSub=$('hudSub'), chairG=$('chair'), gameG=$('game');
+let placed=[], mv={x:270,y:0,vy:0,falling:false,ph:0}, sway=0, swayV=0, vehs=[], fxItems=[], lit=0, gameOpacity=1;
+
+function blockG(){
+  const g=document.createElementNS(NS,'g');
+  g.innerHTML=`<rect x="${-BW/2}" y="0" width="${BW}" height="${BH_}" rx="6" fill="#e8a93a" stroke="#9a6b1a" stroke-width="3"/><g stroke="#c98a22" stroke-width="3">${[-64,-48,-32,32,48,64].map(x=>`<line x1="${x}" y1="6" x2="${x}" y2="${BH_-6}"/>`).join('')}</g><rect x="-22" y="8" width="44" height="28" rx="5" fill="#c62828"/><circle cx="0" cy="22" r="8" fill="#ffd166"/>`;
+  return g;
+}
+const topY = n => BASE - BH_*n;
+function addPlaced(x){ const g=blockG(); g.setAttribute('transform',`translate(${x} ${topY(placed.length+1)})`); tower.appendChild(g); placed.push({x,g}); }
+function setHud(a,b){ hud.textContent=a||''; hudSub.textContent=b||''; }
+function addFx(text,x,y,color){
+  const t=document.createElementNS(NS,'text'); t.setAttribute('text-anchor','middle'); t.setAttribute('font-size','34'); t.setAttribute('font-weight','900');
+  t.setAttribute('fill',color||'#ffd166'); t.setAttribute('stroke','#fff'); t.setAttribute('stroke-width','7'); t.setAttribute('paint-order','stroke'); t.textContent=text; fx.appendChild(t); fxItems.push({t,x,y,age:0});
+}
+function addVehicle(kind, tx){
+  const g=document.createElementNS(NS,'g'); const id='arm'+vehs.length;
+  g.innerHTML = kind==='car'?vCar():kind==='exc'?vExc(id):vCrane(); vehicles.appendChild(g);
+  const from = tx<270 ? -90 : 630;
+  vehs.push({g,kind,x:from,tx,id,ph:rnd(0,6)});
+}
+function newMover(){ const g=blockG(); mover.innerHTML=''; mover.appendChild(g); mv.g=g; mv.falling=false; mv.vy=0; mv.y=topY(placed.length+1)-130; }
+
+function startStack(){
+  state='stack'; setHud('叠高高 0/'+TOTAL,'点一下屏幕，放下积木 👆'); startVeh.innerHTML=''; $('start').style.display='none'; newMover();
+}
+function drop(){ if(state!=='stack'||mv.falling) return; mv.falling=true; mv.vy=0; sfx.tap(); }
+function land(){
+  const n=placed.length, prevX=n?placed[n-1].x:270, d=mv.x-prevX;
+  const perfect=Math.abs(d)<30;
+  let x = perfect ? prevX : prevX+Math.max(-70,Math.min(70,d));
+  x=Math.max(125,Math.min(415,x));
+  addPlaced(x); mover.innerHTML=''; sway+= (perfect?0:d/45); swayV=0;
+  const c=placed.length;
+  if(perfect){ sfx.perfect(); addFx('Perfect!',x,topY(c)-10,'#ff6f91'); } else sfx.land();
+  setHud('叠高高 '+c+'/'+TOTAL,'点一下屏幕，放下积木 👆');
+  if(c===2) addVehicle('car',90);
+  if(c===4) addVehicle('exc',270);
+  if(c===TOTAL){ addVehicle('crane',450); finishStack(); } else newMover();
+}
+function finishStack(){
+  state='cakeDrop'; stateT=performance.now(); setHud('哇！好高的楼！','');
+  const x=placed[placed.length-1].x;
+  cake.setAttribute('transform',`translate(${x} 200)`); cake.setAttribute('opacity',1); cake._x=x;
+  candles.innerHTML='';
+  [-30,0,30].forEach((cx,i)=>{ const g=document.createElementNS(NS,'g'); g.setAttribute('transform',`translate(${cx} -84)`);
+    g.innerHTML=`<rect x="-5" y="-30" width="10" height="30" rx="2" fill="#4cc9f0"/><path class="fl" d="M0 -36 q-9-12 0-26 q9 14 0 26z" fill="#ffb703"/><path d="M0 -36 q-4-7 0-14 q4 7 0 14z" fill="#fff3b0"/>`; candles.appendChild(g); });
+  lit=3;
+}
+function blowNext(){
+  const fl=[...candles.children].filter(g=>!g._off)[0]; if(!fl) return;
+  fl._off=true; fl.querySelectorAll('path').forEach(p=>p.setAttribute('opacity',0)); sfx.blow();
+  const cxs=+cake._x + (+/translate\((-?\d+)/.exec(fl.getAttribute('transform'))[1]); smoke(cxs, topY(TOTAL)-84-70+ (cake._y||0));
+  lit--; setHud(lit?'再吹一个！':'', lit?`还有 ${lit} 根蜡烛`:'');
+  if(!lit){ state='wish'; stateT=performance.now(); sfx.chime(); setHud('许个愿吧 ✨','');
+    [[110,330],[430,300],[270,220]].forEach((p,i)=>setTimeout(()=>{ firework(p[0],p[1]); },i*350)); spawn(); }
+}
+function startShow(){
+  state='show'; showStart=performance.now(); playMelody(); bits=[]; flags={b1:false,b2:false};
+}
+
+/* ---- input ---- */
+$('go').addEventListener('click',e=>{ e.stopPropagation(); audioInit(); sfx.tap(); startStack(); });
+$('again').addEventListener('click',e=>{ e.stopPropagation(); location.reload(); });
+wrap.addEventListener('pointerdown',e=>{
+  if(e.target.closest('button')) return;
+  if(state==='stack') drop(); else if(state==='candles') blowNext();
+});
+
+/* ---- per-frame ---- */
+let flags={b1:false,b2:false}, lastNow=performance.now();
+function hideShow(){ body.setAttribute('opacity',0); hands.setAttribute('opacity',0); $('dancer').setAttribute('opacity',0); banner.setAttribute('opacity',0); }
+function tick(now){
+  const dt=Math.min(.05,(now-lastNow)/1000); lastNow=now; const sec=now/1000;
+  const target = (state==='show'||state==='end')?0:1; gameOpacity += (target-gameOpacity)*Math.min(1,dt*6); gameG.setAttribute('opacity',Math.max(0,Math.min(1,gameOpacity)).toFixed(3));
+  chairG.setAttribute('opacity', (state==='show'||state==='end')?1:0);
+  // tower sway
+  swayV += (-sway*40 - swayV*4)*dt; sway += swayV*dt; tower.setAttribute('transform',`rotate(${sway.toFixed(3)} 270 ${BASE})`);
+  // parked vehicles drive in; excavator digs
+  for(const v of vehs){ v.x += (v.tx-v.x)*Math.min(1,dt*3); const sc=.85;
+    v.g.setAttribute('transform',`translate(${v.x} 928) scale(${v.tx<270?sc:v.tx>270?-sc:sc} ${sc})`.replace('scale(-','scale(-'));
+    if(v.kind==='exc'){ const a=document.getElementById(v.id); if(a) a.setAttribute('transform',`translate(-6 -46) rotate(${Math.sin(sec*2.2+v.ph)*18-6})`); } }
+  // floating text
+  for(let i=fxItems.length-1;i>=0;i--){ const f=fxItems[i]; f.age+=dt; f.t.setAttribute('x',f.x); f.t.setAttribute('y',f.y-f.age*50); f.t.setAttribute('opacity',Math.max(0,1-f.age/1.1)); if(f.age>1.1){ f.t.remove(); fxItems.splice(i,1); } }
+
+  if(state==='start'){
+    // excavator drives back and forth with the arm digging, behind the title
+    if(!startVeh.firstChild){ const g=document.createElementNS(NS,'g'); g.innerHTML=vExc('armS'); startVeh.appendChild(g); startVeh._g=g; }
+    const x=270+150*Math.sin(sec*.7), dir=Math.cos(sec*.7)>=0?1:-1;
+    startVeh._g.setAttribute('transform',`translate(${x} 930) scale(${dir>0?-1.1:1.1} 1.1)`);
+    $('armS').setAttribute('transform',`translate(-6 -46) rotate(${Math.sin(sec*3)*20-6})`);
+  }
+  else if(state==='stack'){
+    mv.ph += dt*(1.5+.35*placed.length);
+    if(!mv.falling){ mv.x=270+150*Math.sin(mv.ph); }
+    else { mv.vy+=2600*dt; mv.y+=mv.vy*dt; const ty=topY(placed.length+1); if(mv.y>=ty){ mv.y=ty; land(); } }
+    if(state==='stack') mv.g.setAttribute('transform',`translate(${mv.x} ${mv.y})`);
+  }
+  else if(state==='cakeDrop'){
+    const u=Math.min(1,(now-stateT)/700), y=200+(topY(TOTAL)-200)*(u*u); cake._y=y-topY(TOTAL);
+    cake.setAttribute('transform',`translate(${cake._x} ${y})`);
+    if(u>=1){ sfx.land(); state='candles'; stateT=now; setHud('吹蜡烛！','点一下，吹灭一根蜡烛 🎂'); }
+  }
+  else if(state==='wish'){ if(now-stateT>2600){ state='fade'; stateT=now; setHud('',''); } }
+  else if(state==='fade'){ if(now-stateT>700){ startShow(); } }
+  if(state==='candles'||state==='cakeDrop'||state==='wish'){
+    [...candles.querySelectorAll('.fl')].forEach((p,i)=>p.setAttribute('transform',`scale(${1+.08*Math.sin(sec*14+i)} ${1+.15*Math.sin(sec*11+i*2)})`));
+  }
+
+  if(state==='show'||state==='end'){
+    let t=(now-showStart)/1000; if(frozenT!==null) t=frozenT;
+    if(t>=31){ t=30.95; if(state!=='end'){ state='end'; $('end').classList.add('on'); stopMelody(); } }
+    if(!flags.b1 && t>=19.3){ flags.b1=true; spawn(); sfx.pop(); }
+    if(!flags.b2 && t>=29.2){ flags.b2=true; spawn(); sfx.pop(); }
+    render(t);
+  } else hideShow();
+  drawFx(sec);
+  requestAnimationFrame(tick);
+}
+
+/* ---- debug presets for screenshots: ?s=stack&n=3 | ?s=candles | ?s=show&t=20 ---- */
+const frozenT = params.get('t')!==null ? parseFloat(params.get('t')) : null;
+const preset = params.get('s');
+if(preset && preset!=='start'){
+  $('start').style.display='none'; startVeh.innerHTML='';
+  if(preset==='stack'||preset==='candles'||preset==='show'){
+    const n = preset==='stack' ? +(params.get('n')||3) : TOTAL;
+    for(let i=0;i<n;i++) addPlaced(270+[0,22,-18,30,-8,12][i]);
+    if(n>=2) addVehicle('car',90); if(n>=4) addVehicle('exc',270); if(n>=6) addVehicle('crane',450);
+    vehs.forEach(v=>v.x=v.tx);
+    if(preset==='stack'){ state='stack'; setHud('叠高高 '+n+'/'+TOTAL,'点一下屏幕，放下积木 👆'); newMover(); mv.x=210; mv.y=topY(n+1)-130; }
+    else { finishStack(); cake.setAttribute('transform',`translate(${cake._x} ${topY(TOTAL)})`); cake._y=0; state='candles'; setHud('吹蜡烛！','点一下，吹灭一根蜡烛 🎂'); if(preset==='show'){ showStart=performance.now()-(frozenT||0)*1000; state='show'; setHud('',''); gameOpacity=0; } }
+  }
+}
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
