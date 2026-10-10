@@ -94,14 +94,14 @@
     <g id="dancer" opacity="0">
       <ellipse id="dShadow" cx="270" cy="892" rx="80" ry="14" fill="rgba(70,35,0,.28)"/>
       <g id="dBody">
-        <g id="dLegL"><rect x="-19" y="-6" width="38" height="106" rx="19" fill="#34495e"/><g id="dKneeL"><rect x="-17" y="-4" width="34" height="104" rx="17" fill="#34495e"/><ellipse cx="0" cy="104" rx="30" ry="14" fill="#fff" stroke="#ff6f91" stroke-width="5"/></g></g>
-        <g id="dLegR"><rect x="-19" y="-6" width="38" height="106" rx="19" fill="#34495e"/><g id="dKneeR"><rect x="-17" y="-4" width="34" height="104" rx="17" fill="#34495e"/><ellipse cx="0" cy="104" rx="30" ry="14" fill="#fff" stroke="#ff6f91" stroke-width="5"/></g></g>
+        <g id="dLegL"><rect x="-19" y="-6" width="38" height="106" rx="19" fill="#14161f"/><g id="dKneeL"><rect x="-17" y="-4" width="34" height="104" rx="17" fill="#14161f"/><ellipse cx="0" cy="90" rx="19" ry="9" fill="#fff"/><ellipse cx="0" cy="104" rx="30" ry="14" fill="#0b0b0b" stroke="#6b6b7b" stroke-width="3"/></g></g>
+        <g id="dLegR"><rect x="-19" y="-6" width="38" height="106" rx="19" fill="#14161f"/><g id="dKneeR"><rect x="-17" y="-4" width="34" height="104" rx="17" fill="#14161f"/><ellipse cx="0" cy="90" rx="19" ry="9" fill="#fff"/><ellipse cx="0" cy="104" rx="30" ry="14" fill="#0b0b0b" stroke="#6b6b7b" stroke-width="3"/></g></g>
         <g id="dTorso">
-          <path d="M-62 4 Q-72 -80 -66 -150 Q-64 -176 -40 -178 H40 Q64 -176 66 -150 Q72 -80 62 4 Z" fill="#3f6fe0"/>
-          <rect x="-64" y="-12" width="128" height="14" rx="6" fill="#2a3b7a"/>
+          <path d="M-62 4 Q-72 -80 -66 -150 Q-64 -176 -40 -178 H40 Q64 -176 66 -150 Q72 -80 62 4 Z" fill="#1d1d2b"/><path d="M-26 -178 L0 -128 L26 -178 Z" fill="#fff"/>
+          <rect x="-64" y="-12" width="128" height="14" rx="6" fill="#000"/><rect x="-9" y="-13" width="18" height="16" rx="3" fill="#ffd166"/>
           <rect x="-22" y="-214" width="44" height="46" rx="10" fill="#f6c9a3"/>
-          <g id="dArmL"><rect x="-19" y="-6" width="38" height="66" rx="19" fill="#3f6fe0"/><g id="dElbL"><rect x="-15" y="-6" width="30" height="62" rx="15" fill="#f6c9a3"/><circle cx="0" cy="58" r="18" fill="#f6c9a3"/></g></g>
-          <g id="dArmR"><rect x="-19" y="-6" width="38" height="66" rx="19" fill="#3f6fe0"/><g id="dElbR"><rect x="-15" y="-6" width="30" height="62" rx="15" fill="#f6c9a3"/><circle cx="0" cy="58" r="18" fill="#f6c9a3"/></g></g>
+          <g id="dArmL"><rect x="-19" y="-6" width="38" height="66" rx="19" fill="#1d1d2b"/><g id="dElbL"><rect x="-15" y="-6" width="30" height="62" rx="15" fill="#f6c9a3"/><circle cx="0" cy="58" r="18" fill="#f6c9a3"/></g></g>
+          <g id="dArmR"><rect x="-19" y="-6" width="38" height="66" rx="19" fill="#1d1d2b"/><g id="dElbR"><rect x="-15" y="-6" width="30" height="62" rx="15" fill="#f6c9a3"/><circle cx="0" cy="58" r="19" fill="#fff" stroke="#cfd8dc" stroke-width="2"/><g transform="translate(18 44)"><path id="dSpark" d="M0 -14 L3 -3 L14 0 L3 3 L0 14 L-3 3 L-14 0 L-3 -3Z" fill="#fff" stroke="#ffd166" stroke-width="1.5"/></g></g></g>
           <g id="dHead"></g>
         </g>
       </g>
@@ -215,52 +215,58 @@ const D = Math.PI/180, GROUND = 892, SC = .9;
   const hc = head.cloneNode(true);
   hc.removeAttribute('transform');
   const open = hc.querySelector('#mOpen'), closed = hc.querySelector('#mClosed'), h = hc.querySelector('#hat');
-  open.setAttribute('opacity',1); open.removeAttribute('transform'); closed.setAttribute('opacity',0); h.setAttribute('opacity',1);
+  open.setAttribute('opacity',1); open.removeAttribute('transform'); closed.setAttribute('opacity',0); h.setAttribute('opacity',0);
+  hc.insertAdjacentHTML('beforeend','<g transform="rotate(-7 0 -170)"><ellipse cx="0" cy="-172" rx="104" ry="19" fill="#121212"/><path d="M-60 -176 Q-62 -256 0 -256 Q62 -256 60 -176 Z" fill="#222"/><path d="M-60 -176 Q0 -164 60 -176 L60 -196 Q0 -184 -60 -196 Z" fill="#ff6f91"/><path d="M-30 -250 Q0 -262 30 -250" fill="none" stroke="#3a3a3a" stroke-width="5" stroke-linecap="round"/></g>');
   hc.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id')); hc.removeAttribute('id');
   $('dHead').appendChild(hc);
 })();
-const dNode = Object.fromEntries(['dancer','dShadow','dBody','dLegL','dLegR','dKneeL','dKneeR','dTorso','dArmL','dArmR','dElbL','dElbR','dHead'].map(k=>[k,$(k)]));
+const dNode = Object.fromEntries(['dancer','dShadow','dBody','dLegL','dLegR','dKneeL','dKneeR','dTorso','dArmL','dArmR','dElbL','dElbR','dHead','dSpark'].map(k=>[k,$(k)]));
 
+const lerp = (a,b,f)=>a+(b-a)*f;
+function blend(A,B,f){ const o={}; for(const k in A) o[k]=lerp(A[k],B[k],f); return o; }
 function dancerPose(t){
-  const P = {x:0,air:0,aL:12,bL:25,aR:12,bR:25,tTilt:0,hTilt:0,armL:50,elL:30,armR:50,elR:30,sx:1};
-  const FIN = {aL:14,bL:20,aR:26,bR:10,armL:45,elL:130,armR:170,elR:0,hTilt:8,tTilt:-4};
-  const mix = (o,u)=>{ for(const k in o) P[k] = P[k] + (o[k]-P[k])*u; };
+  const P = {x:0,air:0,aL:10,bL:15,aR:10,bR:15,tTilt:0,hTilt:0,armL:20,elL:10,armR:20,elR:10,sx:1};
+  const FIN = {aL:10,bL:15,aR:22,bR:5,armL:55,elL:0,armR:120,elR:-100,hTilt:-8,tTilt:6};
+  const mix = (o,u)=>{ for(const k in o) P[k] = lerp(P[k], o[k], u); };
   if (t < 19.3){                                    // jump up onto the table
     const u=(t-18.5)/.8, k=4*u*(1-u);
     P.air=190*k; P.aL=P.aR=12+25*k; P.bL=P.bR=25+55*k; P.armL=P.armR=60+70*k; P.elL=P.elR=20; return P;
   }
   const tau=t-19.3, w=4*Math.PI;
-  if (tau < 2.4){                                   // A: groove, pumping arms
-    const c=Math.cos(w*tau), s=Math.sin(w*tau/2);
-    P.aL=P.aR=14+4*c; P.bL=P.bR=30+16*c; P.tTilt=6*s; P.hTilt=8*s;
-    P.armL=55+40*s; P.armR=55-40*s; P.elL=P.elR=45+20*c;
-  } else if (tau < 4.8){                            // B: side steps across the table
-    const q=tau-2.4, s=Math.sin(2*Math.PI*q), sw=Math.sin(2*Math.PI*q/2.4), lf=Math.max(0,s), rf=Math.max(0,-s);
-    P.x=105*sw; P.aL=12+22*lf; P.bL=28+40*lf; P.aR=12+22*rf; P.bR=28+40*rf;
-    P.tTilt=10*Math.cos(2*Math.PI*q/2.4); P.hTilt=-6*sw;
-    P.armL=75+25*Math.sin(2*Math.PI*q+1); P.armR=75+25*Math.sin(2*Math.PI*q+1+Math.PI); P.elL=P.elR=20;
-  } else if (tau < 7.2){                            // C: robot / pop-lock poses on the beat
-    const st=(tau-4.8)*4, i=Math.floor(st), f=ease(Math.min(1,(st-i)*4));
-    const poses=[[150,30,70,90],[30,150,90,70],[100,100,100,100],[160,160,10,10]];
-    const pv=poses[(i+3)%4], cu=poses[i%4], hs=(i%2?-1:1);
-    P.armL=pv[0]+(cu[0]-pv[0])*f; P.armR=pv[1]+(cu[1]-pv[1])*f; P.elL=pv[2]+(cu[2]-pv[2])*f; P.elR=pv[3]+(cu[3]-pv[3])*f;
-    P.hTilt=14*hs*(2*f-1); P.tTilt=6*hs*(2*f-1);
-    P.aL=P.aR=16; P.bL=P.bR=38+10*Math.cos(2*Math.PI*st);
-  } else if (tau < 9.0){                            // D: floss
-    const th=4*Math.PI*(tau-7.2), s=Math.sin(th);
-    P.aL=P.aR=14; P.bL=P.bR=34+10*Math.cos(2*th);
-    P.armL=60+55*s; P.armR=60-55*s; P.elL=P.elR=10; P.tTilt=-12*s; P.hTilt=10*s; P.x=-26*s;
-  } else if (tau < 9.8){                            // E: spin
+  if (tau < 2.4){                                   // A: hat tip, then point to the sky
+    const c=Math.cos(w*tau), k=tau<1.4 ? Math.sin(Math.PI*tau/1.4) : 0, k2=tau>=1.4 ? Math.sin(Math.PI*(tau-1.4)/1.0) : 0;
+    P.aL=P.aR=10+2*c; P.bL=P.bR=18+8*c;
+    P.armR=20+100*k; P.elR=10-110*k; P.armL=20+135*k2; P.elL=10-10*k2;
+    P.hTilt=-8*k+8*k2; P.tTilt=4*Math.sin(w*tau/2);
+  } else if (tau < 4.8){                            // B: moonwalk, gliding across the table
+    const q=tau-2.4, s=Math.sin(2*Math.PI*q/.8), lf=Math.max(0,s), rf=Math.max(0,-s);
+    P.x=130-260*(q/2.4);
+    P.aL=8+6*lf; P.bL=4+42*lf; P.aR=8+6*rf; P.bR=4+42*rf;
+    P.tTilt=5*s; P.hTilt=-4*s; P.armL=25+15*s; P.armR=25-15*s; P.elL=P.elR=20;
+  } else if (tau < 7.2){                            // C: robot, snapping from pose to pose
+    const st=(tau-4.8)/.3, i=Math.floor(st), f=ease(Math.min(1,(st-i)*4));
+    const poses=[[90,90,-90,-90],[90,90,90,90],[170,5,0,0],[5,170,0,0],[40,40,-100,-100]];
+    const pv=poses[(i+4)%5], cu=poses[i%5], hs=(i%2?-1:1);
+    P.armL=lerp(pv[0],cu[0],f); P.armR=lerp(pv[1],cu[1],f); P.elL=lerp(pv[2],cu[2],f); P.elR=lerp(pv[3],cu[3],f);
+    P.hTilt=14*hs*(2*f-1); P.tTilt=5*hs*(2*f-1);
+    P.aL=P.aR=8; P.bL=P.bR=14+10*Math.cos(2*Math.PI*st);
+  } else if (tau < 9.0){                            // D: kick and point, alternating sides
+    const st=(tau-7.2)*4, i=Math.floor(st), f=ease(Math.min(1,(st-i)*4));
+    const A={armR:150,elR:0,armL:25,elL:60,aL:6,bL:75,aR:10,bR:10,tTilt:-8,hTilt:10};
+    const B={armL:150,elL:0,armR:25,elR:60,aR:6,bR:75,aL:10,bL:10,tTilt:8,hTilt:-10};
+    const pose = blend(i%2?A:B, i%2?B:A, f);
+    Object.assign(P, pose); P.air=10*Math.sin(Math.PI*(st-i));
+  } else if (tau < 9.8){                            // E: spin on the toes
     const q=(tau-9)/.8, k=Math.sin(Math.PI*q); let cs=Math.cos(2*Math.PI*q);
     if (Math.abs(cs)<.08) cs = cs<0 ? -.08 : .08;
-    P.sx=cs; P.air=36*k; P.aL=P.aR=12+14*k; P.bL=P.bR=30+30*k; P.armL=P.armR=100; P.elL=P.elR=60;
+    P.sx=cs; P.air=24*k; P.aL=P.aR=3; P.bL=P.bR=0; P.armL=P.armR=22; P.elL=P.elR=100; P.tTilt=0;
   } else if (tau < 10.1){                           // crouch
     const u=ease((tau-9.8)/.3);
-    P.aL=P.aR=14+10*u; P.bL=P.bR=30+50*u; P.armL=P.armR=40; P.elL=P.elR=30;
-  } else if (tau < 10.7){                           // big jump into the final pose
+    P.aL=P.aR=10+14*u; P.bL=P.bR=15+60*u; P.armL=P.armR=30; P.elL=P.elR=20;
+  } else if (tau < 10.7){                           // jump into the final pose
     const u=(tau-10.1)/.6, k=4*u*(1-u);
-    P.air=170*k; P.aL=P.aR=24; P.bL=P.bR=80; P.armL=P.armR=40; mix(FIN, ease(u)); P.aL+=20*k; P.bL+=40*k;
-  } else { mix(FIN, 1); P.hTilt += 2*Math.sin(t*6); }
+    P.air=150*k; P.aL=P.aR=24; P.bL=P.bR=75; P.armL=P.armR=40; mix(FIN, ease(u)); P.aL+=16*k; P.bL+=40*k;
+  } else { mix(FIN, 1); P.hTilt += 1.5*Math.sin(t*6); }
   return P;
 }
 function renderDancer(t){
@@ -281,6 +287,7 @@ function renderDancer(t){
   n.dArmR.setAttribute('transform', `translate(72 -158) rotate(${-P.armR})`);
   n.dElbR.setAttribute('transform', `translate(0 60) rotate(${P.elR})`);
   n.dHead.setAttribute('transform', `translate(0 -168) rotate(${P.hTilt} 0 -40) scale(.95)`);
+  const sp=Math.abs(Math.sin(t*9)); n.dSpark.setAttribute('transform',`scale(${.4+.9*sp})`); n.dSpark.setAttribute('opacity',.4+.6*sp);
   n.dShadow.setAttribute('cx', cx);
   n.dShadow.setAttribute('rx', 80 - P.air*.2);
   n.dShadow.setAttribute('opacity', Math.max(.3, 1 - P.air/250));
